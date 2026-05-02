@@ -92,7 +92,7 @@ export function AlerteMatchEmail({
     <Html lang="fr">
       <Head />
       <Preview>
-        {emoji} {spotsLeft} place{spotsLeft > 1 ? "s" : ""} dispo — {annonce.title}
+        {`${emoji} ${spotsLeft} place${spotsLeft > 1 ? "s" : ""} dispo — ${annonce.title}`}
       </Preview>
       <Body style={{ backgroundColor: BG, margin: 0, padding: "40px 0", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
         <Container style={{ maxWidth: 600, margin: "0 auto" }}>

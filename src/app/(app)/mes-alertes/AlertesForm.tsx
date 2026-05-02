@@ -3,7 +3,7 @@
 import { useState, useTransition, useMemo } from "react";
 import { SPORT_EMOJI, SPORT_LABEL } from "@/components/ui/Badge";
 import { saveAlertConfig, sendTestEmail, type AlertConfigData } from "@/lib/actions/alertes";
-import type { Sport, AlertFrequency } from "@/types/database";
+import type { Sport, AlertFrequency, Level } from "@/types/database";
 
 const ALL_SPORTS = Object.keys(SPORT_LABEL) as Sport[];
 
@@ -24,7 +24,7 @@ const TIME_SLOTS = [
   { value: "tous",       label: "Peu importe",  sub: "Toute la journée", icon: "⏰" },
 ];
 
-const LEVELS = [
+const LEVELS: { value: Level | "tous"; label: string }[] = [
   { value: "debutant",      label: "Débutant" },
   { value: "intermediaire", label: "Intermédiaire" },
   { value: "confirme",      label: "Confirmé" },

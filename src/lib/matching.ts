@@ -1,6 +1,11 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { resend, resolveRecipient } from "@/lib/resend";
 import { AlerteMatchEmail } from "@/emails/AlerteMatch";
+import type { Database } from "@/types/database";
+
+type ConfigRow = Database["public"]["Tables"]["alert_configs"]["Row"] & {
+  users: { id: string; email: string; name: string; latitude: number | null; longitude: number | null } | null;
+};
 
 const SLOT_RANGES: { value: string; min: number; max: number }[] = [
   { value: "matin",      min: 7,  max: 12 },
@@ -55,12 +60,13 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
   const dayLabel = DAY_LABELS[dow];
 
   // Charger les configs actives dont le sport correspond
-  const { data: configs } = await supabase
+  const { data: rawConfigs } = await supabase
     .from("alert_configs")
     .select("*, users(id, email, name, latitude, longitude)")
     .eq("active", true)
     .contains("sports", [annonce.sport]);
 
+  const configs = rawConfigs as ConfigRow[] | null;
   if (!configs?.length) return;
 
   // Charger 3 autres annonces dispo (pour la section "Autres annonces")
@@ -73,7 +79,7 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
     .limit(3);
 
   for (const config of configs) {
-    const user = config.users as { id: string; email: string; name: string; latitude: number | null; longitude: number | null } | null;
+    const user = config.users;
     if (!user?.email) continue;
     if (user.id === annonce.organizer_id) continue;
 

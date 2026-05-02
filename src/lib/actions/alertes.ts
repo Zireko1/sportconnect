@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import type { Sport, AlertFrequency } from "@/types/database";
+import type { Sport, AlertFrequency, Level } from "@/types/database";
 
 export interface AlertConfigData {
   active: boolean;
@@ -10,7 +10,7 @@ export interface AlertConfigData {
   radius_km: number;
   days_of_week: number[];
   time_slots: string[];
-  level: string;
+  level: Level | "tous";
   frequency: AlertFrequency;
 }
 
