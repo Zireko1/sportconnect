@@ -31,21 +31,24 @@ export async function GET(req: NextRequest) {
   const queue = data as QueueRow[] | null;
   if (!queue?.length) return NextResponse.json({ ok: true, sent: 0 });
 
-  const byUser = new Map<string, QueueRow[]>();
-  for (const entry of queue) {
+  const byUser: Record<string, QueueRow[]> = {};
+  queue.forEach((entry) => {
     const uid = entry.user_id;
-    if (!byUser.has(uid)) byUser.set(uid, []);
-    byUser.get(uid)!.push(entry);
-  }
+    if (!byUser[uid]) byUser[uid] = [];
+    byUser[uid].push(entry);
+  });
 
   let sent = 0;
-  for (const entries of Array.from(byUser.values())) {
+  const groups = Object.values(byUser);
+  for (let i = 0; i < groups.length; i++) {
+    const entries = groups[i];
     const first = entries[0];
     const user = first.users;
     const config = first.alert_configs;
     if (!user || !config) continue;
 
-    const [mainEntry, ...rest] = entries;
+    const mainEntry = entries[0];
+    const rest = entries.slice(1);
     const annonce = mainEntry.annonces as Parameters<typeof sendAlertEmail>[0]["annonce"] | null;
     if (!annonce) continue;
 
