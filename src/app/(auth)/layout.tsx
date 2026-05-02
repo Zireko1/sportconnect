@@ -4,7 +4,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       {/* Logo */}
       <a href="/" className="mb-8 flex-shrink-0">
         <span className="font-syne font-bold text-2xl text-green-alpine">
-          Sport<span className="text-green-dark">Connect</span>
+          Sport<span className="text-green-dark">Voisin</span>
         </span>
       </a>
 
