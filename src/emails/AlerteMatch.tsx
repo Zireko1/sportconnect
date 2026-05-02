@@ -12,7 +12,7 @@ const BG = "#f8faf6";
 
 const SPORT_EMOJI: Record<string, string> = {
   soccer_five: "⚽", padel: "🎾", basket: "🏀", volley: "🏐",
-  futsal: "🎱", badminton: "🏸", velo: "🚴", trail: "🏃", randonnee: "🥾",
+  futsal: "🥅", badminton: "🏸", velo: "🚴", trail: "🏃", randonnee: "🥾",
 };
 const SPORT_LABEL: Record<string, string> = {
   soccer_five: "Soccer Five", padel: "Padel", basket: "Basket 3x3",
@@ -40,6 +40,7 @@ export interface AlerteMatchEmailProps {
   annonce: {
     id: string;
     sport: string;
+    sport_custom?: string | null;
     title: string;
     date_time: string;
     location_name: string;

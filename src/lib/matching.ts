@@ -155,7 +155,7 @@ interface SendAlertEmailParams {
 
 export async function sendAlertEmail(params: SendAlertEmailParams) {
   const sportLabel =
-    { soccer_five: "Soccer Five", padel: "Padel", basket: "Basket", velo: "Vélo", trail: "Trail", randonnee: "Randonnée", volley: "Volley", futsal: "Futsal", badminton: "Badminton" }[params.annonce.sport]
+    { soccer_five: "Soccer Five", padel: "Padel", basket: "Basket", velo: "Vélo", trail: "Trail", randonnee: "Randonnée", volley: "Volley", futsal: "Futsal", badminton: "Badminton", autre: params.annonce.sport_custom ?? "Autre sport" }[params.annonce.sport]
     ?? params.annonce.sport;
 
   await resend.emails.send({

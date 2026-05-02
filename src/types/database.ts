@@ -7,7 +7,8 @@ export type Sport =
   | "badminton"
   | "velo"
   | "trail"
-  | "randonnee";
+  | "randonnee"
+  | "autre";
 
 export type SportType = "collectif" | "outdoor";
 
@@ -67,6 +68,7 @@ export type Database = {
           organizer_id: string;
           sport: Sport;
           sport_type: SportType;
+          sport_custom: string | null;
           title: string;
           description: string | null;
           date_time: string;
@@ -89,6 +91,7 @@ export type Database = {
           organizer_id: string;
           sport: Sport;
           sport_type: SportType;
+          sport_custom?: string | null;
           title: string;
           description?: string | null;
           date_time: string;
@@ -111,6 +114,7 @@ export type Database = {
           organizer_id?: string;
           sport?: Sport;
           sport_type?: SportType;
+          sport_custom?: string | null;
           title?: string;
           description?: string | null;
           date_time?: string;

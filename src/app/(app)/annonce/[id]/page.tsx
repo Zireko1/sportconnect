@@ -85,7 +85,7 @@ export default async function AnnonceDetailPage({ params }: PageProps) {
         {/* Hero */}
         <section className="px-4 py-5 space-y-3">
           <div className="flex items-start justify-between gap-2 flex-wrap">
-            <SportBadge sport={ann.sport} />
+            <SportBadge sport={ann.sport} customLabel={ann.sport_custom} />
             <StatusBadge status={ann.status} />
           </div>
           <h1 className="font-syne font-bold text-2xl text-text-primary leading-tight">
@@ -155,7 +155,7 @@ export default async function AnnonceDetailPage({ params }: PageProps) {
             {/* Hero */}
             <div className="bg-surface rounded-card shadow-card p-6">
               <div className="flex items-start justify-between gap-2 flex-wrap mb-4">
-                <SportBadge sport={ann.sport} />
+                <SportBadge sport={ann.sport} customLabel={ann.sport_custom} />
                 <StatusBadge status={ann.status} />
               </div>
               <h1 className="font-syne font-bold text-3xl text-text-primary leading-tight mb-3">

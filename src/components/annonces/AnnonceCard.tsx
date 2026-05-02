@@ -33,7 +33,7 @@ export function AnnonceCard({ annonce }: { annonce: Annonce }) {
         <CardBody className="space-y-3">
           {/* Header */}
           <div className="flex items-start justify-between gap-2">
-            <SportBadge sport={annonce.sport} />
+            <SportBadge sport={annonce.sport} customLabel={annonce.sport_custom} />
             <StatusBadge status={annonce.status} />
           </div>
 

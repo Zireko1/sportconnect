@@ -22,7 +22,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <div className="flex items-center justify-between">
             <div>
               <span className="font-syne font-bold text-xl text-green-alpine">
-                Sport<span className="text-green-dark">Connect</span>
+                Sport<span className="text-green-dark">Voisin</span>
               </span>
               <p className="font-dm text-text-secondary text-xs">
                 {new Date().toLocaleDateString("fr-FR", {

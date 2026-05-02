@@ -18,7 +18,7 @@ export function DesktopHeader({ avatar }: { avatar: React.ReactNode }) {
       {/* Logo */}
       <Link href="/" className="flex-shrink-0">
         <span className="font-syne font-bold text-xl text-green-alpine">Sport</span>
-        <span className="font-syne font-bold text-xl text-green-dark">Connect</span>
+        <span className="font-syne font-bold text-xl text-green-dark">Voisin</span>
       </Link>
 
       {/* Nav links */}

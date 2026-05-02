@@ -18,7 +18,7 @@ const SPORT_EMOJI: Record<string, string> = {
   padel: "🎾",
   basket: "🏀",
   volley: "🏐",
-  futsal: "🎱",
+  futsal: "🥅",
   badminton: "🏸",
   velo: "🚴",
   trail: "🏃",
@@ -52,10 +52,13 @@ function Badge({ variant = "sport", className = "", children, ...props }: BadgeP
   );
 }
 
-function SportBadge({ sport }: { sport: string }) {
+function SportBadge({ sport, customLabel }: { sport: string; customLabel?: string | null }) {
+  if (sport === "autre") {
+    return <Badge variant="sport">🏅 {customLabel ?? "Autre sport"}</Badge>;
+  }
   return (
     <Badge variant="sport">
-      {SPORT_EMOJI[sport]} {SPORT_LABEL[sport] ?? sport}
+      {SPORT_EMOJI[sport] ?? "🏅"} {SPORT_LABEL[sport] ?? sport}
     </Badge>
   );
 }

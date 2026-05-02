@@ -10,7 +10,7 @@ import { createAnnonce } from "@/lib/actions/annonces";
 import type { Sport, SportType, Level } from "@/types/database";
 
 // Mapping sport → type (la liste fixe CITIES est supprimée)
-const SPORT_TYPE: Record<Sport, SportType> = {
+const SPORT_TYPE: Record<Exclude<Sport, "autre">, SportType> = {
   soccer_five: "collectif",
   padel: "collectif",
   basket: "collectif",
@@ -22,7 +22,7 @@ const SPORT_TYPE: Record<Sport, SportType> = {
   randonnee: "outdoor",
 };
 
-const SPORTS = Object.keys(SPORT_TYPE) as Sport[];
+const SPORTS = Object.keys(SPORT_TYPE) as Exclude<Sport, "autre">[];
 
 const LEVELS: { value: Level; label: string }[] = [
   { value: "debutant", label: "Débutant" },
@@ -32,6 +32,8 @@ const LEVELS: { value: Level; label: string }[] = [
 
 interface FormState {
   sport: Sport | "";
+  sport_custom: string;
+  sport_custom_type: string;
   title: string;
   description: string;
   date: string;
@@ -50,6 +52,8 @@ interface FormState {
 
 const EMPTY_FORM: FormState = {
   sport: "",
+  sport_custom: "",
+  sport_custom_type: "collectif",
   title: "",
   description: "",
   date: "",
@@ -71,9 +75,12 @@ export default function CreerAnnoncePage() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [isPending, startTransition] = useTransition();
+  const [showAutre, setShowAutre] = useState(false);
 
   const sport = form.sport as Sport | "";
-  const sportType = sport ? SPORT_TYPE[sport] : null;
+  const sportType = sport === "autre"
+    ? (form.sport_custom_type as SportType)
+    : (sport ? SPORT_TYPE[sport] : null);
   const isOutdoor = sportType === "outdoor";
   const isCollectif = sportType === "collectif";
 
@@ -82,7 +89,7 @@ export default function CreerAnnoncePage() {
     setErrors((e) => ({ ...e, [key]: undefined }));
   }
 
-  function selectSport(s: Sport) {
+  function selectSport(s: Exclude<Sport, "autre">) {
     const type = SPORT_TYPE[s];
     const defaultTitle = type === "collectif"
       ? `${SPORT_LABEL[s]} — il manque des joueurs`
@@ -93,6 +100,7 @@ export default function CreerAnnoncePage() {
 
   function validateStep2() {
     const errs: Partial<Record<keyof FormState, string>> = {};
+    if (sport === "autre" && !form.sport_custom.trim()) errs.sport_custom = "Nom du sport requis";
     if (!form.title.trim()) errs.title = "Titre requis";
     if (!form.date) errs.date = "Date requise";
     if (!form.time) errs.time = "Heure requise";
@@ -112,7 +120,8 @@ export default function CreerAnnoncePage() {
     startTransition(async () => {
       await createAnnonce({
         sport,
-        sport_type: SPORT_TYPE[sport],
+        sport_type: sport === "autre" ? (form.sport_custom_type as SportType) : SPORT_TYPE[sport as Exclude<Sport, "autre">] ?? "collectif",
+        sport_custom: sport === "autre" ? form.sport_custom : undefined,
         title: form.title,
         description: form.description || undefined,
         date_time: dateTime,
@@ -214,6 +223,68 @@ export default function CreerAnnoncePage() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Autre sport */}
+          <div className="border-t border-[#e0ebe2] pt-4">
+            {!showAutre ? (
+              <button
+                onClick={() => setShowAutre(true)}
+                className="w-full flex items-center gap-2.5 bg-surface border border-dashed border-[#d1e8d4] hover:border-green-alpine hover:bg-green-light rounded-card px-3 py-3 transition-colors text-left"
+              >
+                <span className="text-2xl">🏅</span>
+                <span className="font-dm text-sm font-medium text-text-secondary">Autre sport…</span>
+              </button>
+            ) : (
+              <div className="bg-surface border border-[#e0ebe2] rounded-card p-4 space-y-4">
+                <p className="font-syne font-bold text-sm text-text-primary">Quel sport ?</p>
+                <Input
+                  label="Nom du sport"
+                  value={form.sport_custom}
+                  onChange={(e) => set("sport_custom", e.target.value)}
+                  placeholder="Ex : Escalade, Ultimate frisbee, Boxe…"
+                  error={errors.sport_custom}
+                  // eslint-disable-next-line jsx-a11y/no-autofocus
+                  autoFocus
+                />
+                <div className="space-y-1.5">
+                  <p className="font-dm text-xs font-medium text-text-secondary">Type de sport</p>
+                  <div className="flex gap-2">
+                    {(["collectif", "outdoor"] as SportType[]).map((type) => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => set("sport_custom_type", type)}
+                        className={[
+                          "flex-1 py-2 rounded-card border font-dm text-sm font-medium transition-all",
+                          form.sport_custom_type === type
+                            ? "bg-green-alpine text-white border-green-alpine"
+                            : "bg-background border-[#e0ebe2] text-text-secondary hover:border-green-alpine/40",
+                        ].join(" ")}
+                      >
+                        {type === "collectif" ? "🤝 Collectif" : "🏔 Outdoor"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    if (!form.sport_custom.trim()) {
+                      setErrors((e) => ({ ...e, sport_custom: "Nom du sport requis" }));
+                      return;
+                    }
+                    const defaultTitle = form.sport_custom_type === "collectif"
+                      ? `${form.sport_custom} — il manque des joueurs`
+                      : `Sortie ${form.sport_custom} — cherche compagnons`;
+                    setForm((f) => ({ ...f, sport: "autre", title: defaultTitle }));
+                    setStep(2);
+                  }}
+                >
+                  Continuer →
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
