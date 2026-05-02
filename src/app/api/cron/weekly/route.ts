@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
   }
 
   let sent = 0;
-  for (const [, entries] of byUser) {
+  for (const entries of Array.from(byUser.values())) {
     const first = entries[0];
     const user = first.users;
     const config = first.alert_configs;
