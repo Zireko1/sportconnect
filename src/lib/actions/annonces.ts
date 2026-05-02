@@ -12,6 +12,8 @@ export interface CreateAnnonceInput {
   date_time: string;
   location_name: string;
   city: string;
+  latitude?: number;
+  longitude?: number;
   total_spots: number;
   level?: Level;
   price_per_player?: number;
@@ -38,6 +40,8 @@ export async function createAnnonce(input: CreateAnnonceInput) {
       date_time: input.date_time,
       location_name: input.location_name.trim(),
       city: input.city,
+      latitude: input.latitude ?? null,
+      longitude: input.longitude ?? null,
       total_spots: input.total_spots,
       filled_spots: 1, // l'organisateur compte comme participant
       level: input.level || null,

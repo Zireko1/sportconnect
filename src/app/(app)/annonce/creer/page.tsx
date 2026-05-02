@@ -3,12 +3,13 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea, Select } from "@/components/ui/Input";
+import { CityAutocomplete } from "@/components/ui/CityAutocomplete";
 import { SportBadge, LevelBadge, StatusBadge, SPORT_EMOJI, SPORT_LABEL } from "@/components/ui/Badge";
 import { Card, CardBody } from "@/components/ui/Card";
 import { createAnnonce } from "@/lib/actions/annonces";
 import type { Sport, SportType, Level } from "@/types/database";
 
-// Mapping sport → type
+// Mapping sport → type (la liste fixe CITIES est supprimée)
 const SPORT_TYPE: Record<Sport, SportType> = {
   soccer_five: "collectif",
   padel: "collectif",
@@ -22,8 +23,6 @@ const SPORT_TYPE: Record<Sport, SportType> = {
 };
 
 const SPORTS = Object.keys(SPORT_TYPE) as Sport[];
-
-const CITIES = ["Annecy", "Chambéry", "Aix-les-Bains", "Annemasse", "Thonon-les-Bains"];
 
 const LEVELS: { value: Level; label: string }[] = [
   { value: "debutant", label: "Débutant" },
@@ -39,6 +38,8 @@ interface FormState {
   time: string;
   location_name: string;
   city: string;
+  latitude: string;
+  longitude: string;
   total_spots: string;
   level: Level | "";
   price_per_player: string;
@@ -55,6 +56,8 @@ const EMPTY_FORM: FormState = {
   time: "",
   location_name: "",
   city: "",
+  latitude: "",
+  longitude: "",
   total_spots: "",
   level: "",
   price_per_player: "0",
@@ -115,6 +118,8 @@ export default function CreerAnnoncePage() {
         date_time: dateTime,
         location_name: form.location_name,
         city: form.city,
+        latitude: form.latitude ? parseFloat(form.latitude) : undefined,
+        longitude: form.longitude ? parseFloat(form.longitude) : undefined,
         total_spots: parseInt(form.total_spots),
         level: (form.level as Level) || undefined,
         price_per_player: parseFloat(form.price_per_player) || 0,
@@ -259,15 +264,19 @@ export default function CreerAnnoncePage() {
             placeholder={isOutdoor ? "Ex : Parking Plage d'Albigny" : "Ex : Complexe sportif La Forêt"}
           />
 
-          <Select
+          <CityAutocomplete
             label="Ville"
             value={form.city}
-            onChange={(e) => set("city", e.target.value)}
+            onChange={(city, lat, lon) => {
+              setForm((f) => ({
+                ...f,
+                city,
+                latitude: lat != null ? String(lat) : "",
+                longitude: lon != null ? String(lon) : "",
+              }));
+              setErrors((e) => ({ ...e, city: undefined }));
+            }}
             error={errors.city}
-            options={[
-              { value: "", label: "Choisir une ville" },
-              ...CITIES.map((c) => ({ value: c, label: c })),
-            ]}
           />
 
           {/* Champs outdoor */}

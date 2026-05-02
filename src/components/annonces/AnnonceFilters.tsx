@@ -3,9 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import { SPORT_EMOJI, SPORT_LABEL } from "@/components/ui/Badge";
+import { CityAutocomplete } from "@/components/ui/CityAutocomplete";
 
 const SPORTS = Object.keys(SPORT_LABEL) as (keyof typeof SPORT_LABEL)[];
-const CITIES = ["Annecy", "Chambéry", "Aix-les-Bains", "Annemasse", "Thonon-les-Bains"];
 
 interface AnnonceFiltersProps {
   variant?: "default" | "sidebar";
@@ -67,27 +67,12 @@ export function AnnonceFilters({ variant = "default" }: AnnonceFiltersProps) {
           <p className="font-dm text-xs font-medium text-text-secondary uppercase tracking-wide mb-2">
             Ville
           </p>
-          <div className="flex flex-wrap gap-2">
-            <FilterPill
-              active={!activeCity}
-              onClick={() => setParam("ville", "")}
-              size="sm"
-            >
-              Toutes
-            </FilterPill>
-            {CITIES.map((city) => (
-              <FilterPill
-                key={city}
-                active={activeCity === city}
-                onClick={() =>
-                  setParam("ville", activeCity === city ? "" : city)
-                }
-                size="sm"
-              >
-                {city}
-              </FilterPill>
-            ))}
-          </div>
+          <CityAutocomplete
+            label=""
+            value={activeCity}
+            onChange={(city) => setParam("ville", city)}
+            placeholder="Rechercher une ville…"
+          />
         </div>
       </div>
     );
@@ -117,26 +102,13 @@ export function AnnonceFilters({ variant = "default" }: AnnonceFiltersProps) {
       </div>
 
       {/* Filtre ville */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-        <FilterPill
-          active={!activeCity}
-          onClick={() => setParam("ville", "")}
-          size="sm"
-        >
-          Toutes les villes
-        </FilterPill>
-        {CITIES.map((city) => (
-          <FilterPill
-            key={city}
-            active={activeCity === city}
-            onClick={() =>
-              setParam("ville", activeCity === city ? "" : city)
-            }
-            size="sm"
-          >
-            {city}
-          </FilterPill>
-        ))}
+      <div className="px-1">
+        <CityAutocomplete
+          label=""
+          value={activeCity}
+          onChange={(city) => setParam("ville", city)}
+          placeholder="Filtrer par ville…"
+        />
       </div>
     </div>
   );
