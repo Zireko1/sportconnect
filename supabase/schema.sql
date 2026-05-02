@@ -1,5 +1,5 @@
 -- ============================================================
--- SportConnect — Schéma SQL complet
+-- SportVoisin — Schéma SQL complet
 -- Coller dans : Supabase Dashboard > SQL Editor > New query
 -- ============================================================
 

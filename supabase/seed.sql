@@ -1,5 +1,5 @@
 -- =============================================
--- SportConnect — Données de test
+-- SportVoisin — Données de test
 -- Supabase Dashboard > SQL Editor > New query
 -- =============================================
 
@@ -27,8 +27,8 @@ BEGIN
       '00000000-0000-0000-0000-000000000000',
       'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
       'authenticated', 'authenticated',
-      'demo@sportconnect.fr',
-      crypt('SportConnect2026!', gen_salt('bf')),
+      'demo@sportvoisin.fr',
+      crypt('SportVoisin2026!', gen_salt('bf')),
       now(), now(),
       '{"provider":"email","providers":["email"]}',
       '{"name":"Alex Martin"}',
