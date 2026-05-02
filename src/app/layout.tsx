@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Syne, DM_Sans } from "next/font/google";
+import { Syne, DM_Sans, Plus_Jakarta_Sans, Dancing_Script } from "next/font/google";
 import "./globals.css";
 
 const syne = Syne({
@@ -13,6 +13,20 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
   weight: ["400", "500"],
+  display: "swap",
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin"],
+  variable: "--font-dancing",
+  weight: ["700"],
   display: "swap",
 });
 
@@ -42,7 +56,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${syne.variable} ${dmSans.variable} antialiased`}>
+      <body className={`${syne.variable} ${dmSans.variable} ${plusJakartaSans.variable} ${dancingScript.variable} antialiased`}>
         {children}
       </body>
     </html>

@@ -20,6 +20,7 @@ const config: Config = {
       fontFamily: {
         syne: ["var(--font-syne)", "sans-serif"],
         dm: ["var(--font-dm-sans)", "sans-serif"],
+        jakarta: ["var(--font-jakarta)", "sans-serif"],
       },
       borderRadius: {
         card: "14px",

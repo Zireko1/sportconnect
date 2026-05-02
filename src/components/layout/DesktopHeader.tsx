@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Logo } from "@/components/ui/Logo";
 
 const NAV_LINKS = [
   { href: "/", label: "Accueil", exact: true },
@@ -16,10 +17,7 @@ export function DesktopHeader({ avatar }: { avatar: React.ReactNode }) {
   return (
     <header className="hidden lg:flex items-center justify-between px-8 h-16 bg-surface border-b border-[#e0ebe2] sticky top-0 z-40">
       {/* Logo */}
-      <Link href="/" className="flex-shrink-0">
-        <span className="font-syne font-bold text-xl text-green-alpine">Sport</span>
-        <span className="font-syne font-bold text-xl text-green-dark">Voisin</span>
-      </Link>
+      <Logo />
 
       {/* Nav links */}
       <nav className="flex items-center gap-8">
