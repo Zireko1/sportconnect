@@ -13,7 +13,7 @@ create extension if not exists "unaccent";
 
 create type sport_enum as enum (
   'soccer_five', 'padel', 'basket', 'volley',
-  'futsal', 'badminton', 'velo', 'trail'
+  'futsal', 'badminton', 'velo', 'trail', 'randonnee'
 );
 
 create type sport_type_enum as enum ('collectif', 'outdoor');

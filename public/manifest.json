@@ -1,6 +1,6 @@
 {
-  "name": "SportConnect",
-  "short_name": "SportConnect",
+  "name": "SportVoisin",
+  "short_name": "SportVoisin",
   "description": "Trouve ton match dans le Sillon alpin",
   "start_url": "/",
   "display": "standalone",

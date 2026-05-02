@@ -18,11 +18,12 @@ const SPORT_TYPE: Record<Sport, SportType> = {
   badminton: "collectif",
   velo: "outdoor",
   trail: "outdoor",
+  randonnee: "outdoor",
 };
 
 const SPORTS = Object.keys(SPORT_TYPE) as Sport[];
 
-const CITIES = ["Annecy", "Chambéry", "Aix-les-Bains", "Annemasse"];
+const CITIES = ["Annecy", "Chambéry", "Aix-les-Bains", "Annemasse", "Thonon-les-Bains"];
 
 const LEVELS: { value: Level; label: string }[] = [
   { value: "debutant", label: "Débutant" },
@@ -298,7 +299,7 @@ export default function CreerAnnoncePage() {
                 label={sport === "velo" ? "Allure (km/h moy.)" : "Allure (min/km)"}
                 value={form.pace}
                 onChange={(e) => set("pace", e.target.value)}
-                placeholder={sport === "velo" ? "Ex : 28 km/h" : "Ex : 5min30/km"}
+                placeholder={sport === "velo" ? "Ex : 28 km/h" : sport === "randonnee" ? "Ex : 3km/h" : "Ex : 5min30/km"}
               />
             </div>
           )}

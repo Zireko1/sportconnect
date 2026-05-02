@@ -17,14 +17,14 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "SportConnect — Trouve ton match dans le Sillon alpin",
+  title: "SportVoisin — Trouve ton match dans le Sillon alpin",
   description:
     "Publie une annonce, trouve des joueurs ou des compagnons de sortie. Soccer Five, Padel, Trail, Vélo et plus — Annecy, Chambéry, Aix-les-Bains.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "SportConnect",
+    title: "SportVoisin",
   },
 };
 

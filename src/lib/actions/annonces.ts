@@ -52,5 +52,11 @@ export async function createAnnonce(input: CreateAnnonceInput) {
 
   if (error) throw new Error(error.message);
 
+  // Déclencher le matching en arrière-plan (non-bloquant)
+  const annonceId = data.id;
+  import("@/lib/matching")
+    .then(({ triggerMatchingForAnnonce }) => triggerMatchingForAnnonce(annonceId))
+    .catch((err) => console.error("[matching] erreur:", err));
+
   redirect(`/annonce/${data.id}`);
 }

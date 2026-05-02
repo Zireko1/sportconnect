@@ -10,9 +10,10 @@ interface AnnonceFeedProps {
   sport?: string;
   ville?: string;
   q?: string;
+  variant?: "default" | "grid";
 }
 
-export async function AnnonceFeed({ sport, ville, q }: AnnonceFeedProps) {
+export async function AnnonceFeed({ sport, ville, q, variant = "default" }: AnnonceFeedProps) {
   const supabase = await createClient();
 
   const baseQuery = supabase
@@ -42,6 +43,16 @@ export async function AnnonceFeed({ sport, ville, q }: AnnonceFeedProps) {
 
   if (!annonces || annonces.length === 0) {
     return <EmptyState sport={sport} ville={ville} q={q} />;
+  }
+
+  if (variant === "grid") {
+    return (
+      <div className="grid grid-cols-2 gap-4">
+        {annonces.map((annonce) => (
+          <AnnonceCard key={annonce.id} annonce={annonce} />
+        ))}
+      </div>
+    );
   }
 
   return (

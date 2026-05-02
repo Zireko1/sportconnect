@@ -66,8 +66,11 @@ const NAV_ITEMS = [
 export function BottomNav() {
   const pathname = usePathname();
 
+  // Sur les pages détail d'annonce, le CTA fixe remplace la bottom nav
+  if (/^\/annonce\/[^/]+$/.test(pathname)) return null;
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-surface border-t border-[#e0ebe2] z-50 safe-bottom">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-[#e0ebe2] z-50 safe-bottom">
       <div className="max-w-sm mx-auto flex items-end justify-around px-1 pb-2 pt-1">
         {NAV_ITEMS.map(({ href, label, exact, icon }) => {
           const active = exact ? pathname === href : pathname.startsWith(href);

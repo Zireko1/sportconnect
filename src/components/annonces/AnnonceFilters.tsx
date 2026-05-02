@@ -5,10 +5,13 @@ import { useCallback } from "react";
 import { SPORT_EMOJI, SPORT_LABEL } from "@/components/ui/Badge";
 
 const SPORTS = Object.keys(SPORT_LABEL) as (keyof typeof SPORT_LABEL)[];
+const CITIES = ["Annecy", "Chambéry", "Aix-les-Bains", "Annemasse", "Thonon-les-Bains"];
 
-const CITIES = ["Annecy", "Chambéry", "Aix-les-Bains", "Annemasse"];
+interface AnnonceFiltersProps {
+  variant?: "default" | "sidebar";
+}
 
-export function AnnonceFilters() {
+export function AnnonceFilters({ variant = "default" }: AnnonceFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeSport = searchParams.get("sport") ?? "";
@@ -28,6 +31,68 @@ export function AnnonceFilters() {
     [router, searchParams]
   );
 
+  if (variant === "sidebar") {
+    return (
+      <div className="space-y-5">
+        {/* Sport */}
+        <div>
+          <p className="font-dm text-xs font-medium text-text-secondary uppercase tracking-wide mb-2">
+            Sport
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <FilterPill
+              active={!activeSport}
+              onClick={() => setParam("sport", "")}
+              size="sm"
+            >
+              Tous
+            </FilterPill>
+            {SPORTS.map((sport) => (
+              <FilterPill
+                key={sport}
+                active={activeSport === sport}
+                onClick={() =>
+                  setParam("sport", activeSport === sport ? "" : sport)
+                }
+                size="sm"
+              >
+                {SPORT_EMOJI[sport]} {SPORT_LABEL[sport]}
+              </FilterPill>
+            ))}
+          </div>
+        </div>
+
+        {/* Ville */}
+        <div>
+          <p className="font-dm text-xs font-medium text-text-secondary uppercase tracking-wide mb-2">
+            Ville
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <FilterPill
+              active={!activeCity}
+              onClick={() => setParam("ville", "")}
+              size="sm"
+            >
+              Toutes
+            </FilterPill>
+            {CITIES.map((city) => (
+              <FilterPill
+                key={city}
+                active={activeCity === city}
+                onClick={() =>
+                  setParam("ville", activeCity === city ? "" : city)
+                }
+                size="sm"
+              >
+                {city}
+              </FilterPill>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3 px-4 py-3 bg-surface border-b border-[#e0ebe2]">
       {/* Filtre sport — scroll horizontal */}
@@ -42,7 +107,9 @@ export function AnnonceFilters() {
           <FilterPill
             key={sport}
             active={activeSport === sport}
-            onClick={() => setParam("sport", activeSport === sport ? "" : sport)}
+            onClick={() =>
+              setParam("sport", activeSport === sport ? "" : sport)
+            }
           >
             {SPORT_EMOJI[sport]} {SPORT_LABEL[sport]}
           </FilterPill>
@@ -62,7 +129,9 @@ export function AnnonceFilters() {
           <FilterPill
             key={city}
             active={activeCity === city}
-            onClick={() => setParam("ville", activeCity === city ? "" : city)}
+            onClick={() =>
+              setParam("ville", activeCity === city ? "" : city)
+            }
             size="sm"
           >
             {city}

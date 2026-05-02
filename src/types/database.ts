@@ -6,7 +6,8 @@ export type Sport =
   | "futsal"
   | "badminton"
   | "velo"
-  | "trail";
+  | "trail"
+  | "randonnee";
 
 export type SportType = "collectif" | "outdoor";
 

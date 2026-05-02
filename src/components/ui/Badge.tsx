@@ -22,6 +22,7 @@ const SPORT_EMOJI: Record<string, string> = {
   badminton: "🏸",
   velo: "🚴",
   trail: "🏃",
+  randonnee: "🥾",
 };
 
 const SPORT_LABEL: Record<string, string> = {
@@ -33,6 +34,7 @@ const SPORT_LABEL: Record<string, string> = {
   badminton: "Badminton",
   velo: "Vélo de route",
   trail: "Trail running",
+  randonnee: "Randonnée",
 };
 
 function Badge({ variant = "sport", className = "", children, ...props }: BadgeProps) {
