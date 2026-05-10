@@ -241,6 +241,55 @@ export type Database = {
         };
         Relationships: [];
       };
+      messages: {
+        Row: {
+          id: string;
+          annonce_id: string;
+          sender_id: string;
+          receiver_id: string;
+          content: string;
+          read: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          annonce_id: string;
+          sender_id: string;
+          receiver_id: string;
+          content: string;
+          read?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          annonce_id?: string;
+          sender_id?: string;
+          receiver_id?: string;
+          content?: string;
+          read?: boolean;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "messages_annonce_id_fkey";
+            columns: ["annonce_id"];
+            referencedRelation: "annonces";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey";
+            columns: ["sender_id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "messages_receiver_id_fkey";
+            columns: ["receiver_id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SportBadge, StatusBadge } from "@/components/ui/Badge";
 import { JoinButton } from "@/components/annonces/JoinButton";
 import { ShareButton } from "@/components/annonces/ShareButton";
+import { ContactSection } from "@/components/annonces/ContactSection";
 import type { Database } from "@/types/database";
 
 type AnnonceDetail = Database["public"]["Tables"]["annonces"]["Row"] & {
@@ -12,6 +13,7 @@ type AnnonceDetail = Database["public"]["Tables"]["annonces"]["Row"] & {
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ withUser?: string }>;
 }
 
 const LEVEL_LABELS: Record<string, string> = {
@@ -20,8 +22,9 @@ const LEVEL_LABELS: Record<string, string> = {
   confirme: "Confirmé",
 };
 
-export default async function AnnonceDetailPage({ params }: PageProps) {
+export default async function AnnonceDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const { withUser } = await searchParams;
   const supabase = await createClient();
 
   const [{ data: annonce, error }, { data: { user } }] = await Promise.all([
@@ -40,15 +43,38 @@ export default async function AnnonceDetailPage({ params }: PageProps) {
 
   const isOrganizer = !!user && user.id === ann.organizer_id;
   let isInscrit = false;
+  let chatPartnerName = "";
 
-  if (user && !isOrganizer) {
-    const { data: inscription } = await supabase
-      .from("inscriptions")
-      .select("id")
-      .eq("annonce_id", id)
-      .eq("user_id", user.id)
-      .maybeSingle();
-    isInscrit = !!inscription;
+  const fetchInscription = user && !isOrganizer
+    ? supabase.from("inscriptions").select("id").eq("annonce_id", id).eq("user_id", user.id).maybeSingle()
+    : Promise.resolve({ data: null });
+
+  const fetchChatPartner = user && isOrganizer && withUser
+    ? supabase.from("users").select("name").eq("id", withUser).single()
+    : Promise.resolve({ data: null });
+
+  const [{ data: inscription }, { data: chatPartnerRow }] = await Promise.all([
+    fetchInscription,
+    fetchChatPartner,
+  ]);
+
+  if (inscription) isInscrit = true;
+  if (chatPartnerRow) chatPartnerName = chatPartnerRow.name;
+
+  // Determine chat state
+  let chatPartnerId: string | null = null;
+  let chatLabel = "";
+  let chatDefaultOpen = false;
+
+  if (user) {
+    if (!isOrganizer) {
+      chatPartnerId = ann.organizer_id;
+      chatLabel = "Contacter l'organisateur";
+    } else if (withUser) {
+      chatPartnerId = withUser;
+      chatLabel = `Conversation avec ${chatPartnerName || "un participant"}`;
+      chatDefaultOpen = true;
+    }
   }
 
   const spotsLeft = ann.total_spots - ann.filled_spots;
@@ -128,6 +154,20 @@ export default async function AnnonceDetailPage({ params }: PageProps) {
           />
         </div>
 
+        {/* Chat */}
+        {user && chatPartnerId && (
+          <div className="mx-4 mb-4">
+            <ContactSection
+              annonceId={id}
+              currentUserId={user.id}
+              chatPartnerId={chatPartnerId}
+              label={chatLabel}
+              annonceTitle={ann.title}
+              defaultOpen={chatDefaultOpen}
+            />
+          </div>
+        )}
+
         {/* Carte */}
         <div className="mx-4 mb-4">
           <MapPlaceholder locationName={ann.location_name} city={ann.city} />
@@ -204,6 +244,18 @@ export default async function AnnonceDetailPage({ params }: PageProps) {
               avatarUrl={ann.users?.avatar_url ?? null}
               matchesOrganized={matchesOrganized ?? 0}
             />
+
+            {/* Chat */}
+            {user && chatPartnerId && (
+              <ContactSection
+                annonceId={id}
+                currentUserId={user.id}
+                chatPartnerId={chatPartnerId}
+                label={chatLabel}
+                annonceTitle={ann.title}
+                defaultOpen={chatDefaultOpen}
+              />
+            )}
           </aside>
         </div>
       </div>
@@ -388,9 +440,6 @@ function OrganizerCard({
             {matchesOrganized > 1 ? "s" : ""}
           </p>
         </div>
-        <button className="flex-shrink-0 font-dm text-xs text-green-alpine border border-green-alpine/40 rounded-pill px-3 py-1.5 hover:bg-green-light transition-colors">
-          Message
-        </button>
       </div>
     </div>
   );

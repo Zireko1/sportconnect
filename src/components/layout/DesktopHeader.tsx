@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/", label: "Accueil", exact: true },
   { href: "/explorer", label: "Explorer", exact: false },
   { href: "/mes-alertes", label: "Alertes", exact: false },
+  { href: "/messages", label: "Messages", exact: false },
   { href: "/profil", label: "Profil", exact: false },
 ];
 
