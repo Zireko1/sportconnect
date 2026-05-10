@@ -7,7 +7,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const inputBase =
-  "w-full font-dm text-text-primary bg-surface border border-[#d1e8d4] rounded-card px-4 py-3 text-sm placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-green-alpine focus:border-transparent transition-colors";
+  "w-full font-dm text-text-primary bg-surface border border-[#c8d9eb] rounded-card px-4 py-3 text-sm placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-navy focus:border-transparent transition-colors";
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, hint, className = "", id, ...props }, ref) => {

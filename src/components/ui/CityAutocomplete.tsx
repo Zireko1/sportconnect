@@ -109,12 +109,12 @@ export function CityAutocomplete({
           autoComplete="off"
           className={[
             "w-full bg-background border rounded-lg px-3 py-2.5 font-dm text-sm text-text-primary",
-            "placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-green-alpine/30 focus:border-green-alpine transition-colors",
-            error ? "border-red-400" : "border-[#e0ebe2]",
+            "placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-navy/30 focus:border-navy transition-colors",
+            error ? "border-red-400" : "border-[#dce6f0]",
           ].join(" ")}
         />
         {loading && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-green-alpine/30 border-t-green-alpine rounded-full animate-spin block" />
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-navy/30 border-t-navy rounded-full animate-spin block" />
         )}
         {!loading && query && (
           <button
@@ -131,13 +131,13 @@ export function CityAutocomplete({
       </div>
       {error && <p className="mt-1 font-dm text-xs text-red-500">{error}</p>}
       {open && suggestions.length > 0 && (
-        <ul className="absolute z-50 mt-1 w-full bg-surface border border-[#e0ebe2] rounded-lg shadow-lg overflow-hidden">
+        <ul className="absolute z-50 mt-1 w-full bg-surface border border-[#dce6f0] rounded-lg shadow-lg overflow-hidden">
           {suggestions.map((s, i) => (
             <li key={i}>
               <button
                 type="button"
                 onMouseDown={() => select(s)}
-                className="w-full text-left px-3 py-2.5 font-dm text-sm text-text-primary hover:bg-green-light transition-colors border-b border-[#f0f5f1] last:border-0"
+                className="w-full text-left px-3 py-2.5 font-dm text-sm text-text-primary hover:bg-navy-light transition-colors border-b border-[#f0f5fb] last:border-0"
               >
                 <span className="font-medium">{s.city}</span>
                 <span className="text-text-secondary ml-1.5 text-xs">{s.postcode}</span>

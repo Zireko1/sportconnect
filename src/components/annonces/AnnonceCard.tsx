@@ -81,12 +81,12 @@ export function AnnonceCard({ annonce }: { annonce: Annonce }) {
           )}
 
           {/* Footer */}
-          <div className="flex items-center justify-between pt-1 border-t border-[#f0f5f1]">
+          <div className="flex items-center justify-between pt-1 border-t border-[#f0f5fb]">
             <div className="flex items-center gap-2">
               {annonce.level && <LevelBadge level={annonce.level} />}
               <span className="font-dm text-xs text-text-secondary">
                 {spotsLeft > 0 ? (
-                  <span className="text-green-alpine font-medium">
+                  <span className="text-navy font-medium">
                     {spotsLeft} place{spotsLeft > 1 ? "s" : ""} dispo
                   </span>
                 ) : (
@@ -99,7 +99,7 @@ export function AnnonceCard({ annonce }: { annonce: Annonce }) {
                 {annonce.price_per_player}€
               </span>
             ) : (
-              <span className="font-dm text-xs text-green-alpine bg-green-light px-2 py-0.5 rounded-pill">
+              <span className="font-dm text-xs text-navy bg-navy-light px-2 py-0.5 rounded-pill">
                 Gratuit
               </span>
             )}

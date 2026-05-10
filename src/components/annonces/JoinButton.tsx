@@ -26,7 +26,7 @@ export function JoinButton({
 
   if (isOrganizer) {
     return (
-      <div className={`${base} bg-green-light text-green-dark flex items-center justify-center gap-2`}>
+      <div className={`${base} bg-navy-light text-navy-dark flex items-center justify-center gap-2`}>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
@@ -40,7 +40,7 @@ export function JoinButton({
     return (
       <a
         href="/connexion"
-        className={`${base} bg-green-alpine text-white hover:bg-green-dark block`}
+        className={`${base} bg-navy text-white hover:bg-navy-dark block`}
       >
         Se connecter pour rejoindre
       </a>
@@ -50,7 +50,7 @@ export function JoinButton({
   if (isInscrit) {
     return (
       <div className="space-y-2">
-        <div className={`${base} bg-green-light text-green-dark flex items-center justify-center gap-2`}>
+        <div className={`${base} bg-navy-light text-navy-dark flex items-center justify-center gap-2`}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
@@ -101,7 +101,7 @@ export function JoinButton({
           });
         }}
         disabled={pending}
-        className={`${base} bg-green-alpine text-white hover:bg-green-dark active:scale-[0.99] ${pending ? "opacity-70 cursor-wait" : ""}`}
+        className={`${base} bg-navy text-white hover:bg-navy-dark active:scale-[0.99] ${pending ? "opacity-70 cursor-wait" : ""}`}
       >
         {pending ? "Inscription en cours…" : "Rejoindre ce match"}
       </button>

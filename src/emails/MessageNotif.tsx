@@ -11,12 +11,12 @@ import {
   Link,
 } from "@react-email/components";
 
-const GREEN = "#2d9e4e";
-const DARK = "#1a2e1a";
-const LIGHT_GREEN = "#e8f5ec";
-const BORDER = "#e0ebe2";
+const NAVY = "#1e3a5f";
+const DARK = "#1a2e40";
+const NAVY_LIGHT = "#eef2f7";
+const BORDER = "#dce6f0";
 const GRAY = "#666666";
-const BG = "#f8faf6";
+const BG = "#f6f8fa";
 
 export interface MessageNotifEmailProps {
   receiverName: string;
@@ -60,7 +60,7 @@ export function MessageNotifEmail({
           }}
         >
           {/* Header */}
-          <Section style={{ backgroundColor: GREEN, padding: "24px 32px" }}>
+          <Section style={{ backgroundColor: NAVY, padding: "24px 32px" }}>
             <Text
               style={{
                 color: "#ffffff",
@@ -102,7 +102,7 @@ export function MessageNotifEmail({
             {/* Message preview bubble */}
             <Section
               style={{
-                backgroundColor: LIGHT_GREEN,
+                backgroundColor: NAVY_LIGHT,
                 border: `1px solid ${BORDER}`,
                 borderRadius: 12,
                 padding: "14px 18px",
@@ -125,7 +125,7 @@ export function MessageNotifEmail({
             <Button
               href={annonceUrl}
               style={{
-                backgroundColor: GREEN,
+                backgroundColor: NAVY,
                 color: "#ffffff",
                 borderRadius: 24,
                 padding: "13px 28px",
@@ -153,7 +153,7 @@ export function MessageNotifEmail({
               }}
             >
               Vous recevez cet email car vous avez une annonce active sur{" "}
-              <Link href={annonceUrl} style={{ color: GREEN }}>
+              <Link href={annonceUrl} style={{ color: NAVY }}>
                 SportVoisin
               </Link>
               . Pour éviter les emails répétés, nous n&apos;envoyons qu&apos;une notification toutes les 2&nbsp;h par conversation.

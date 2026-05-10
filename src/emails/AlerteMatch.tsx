@@ -3,12 +3,12 @@ import {
   Section, Row, Column, Heading, Text, Button, Hr, Link,
 } from "@react-email/components";
 
-const GREEN = "#2d9e4e";
-const DARK = "#1a2e1a";
-const LIGHT_GREEN = "#e8f5ec";
-const BORDER = "#e0ebe2";
+const NAVY = "#1e3a5f";
+const DARK = "#1a2e40";
+const NAVY_LIGHT = "#eef2f7";
+const BORDER = "#dce6f0";
 const GRAY = "#666666";
-const BG = "#f8faf6";
+const BG = "#f6f8fa";
 
 const SPORT_EMOJI: Record<string, string> = {
   soccer_five: "⚽", padel: "🎾", basket: "🏀", volley: "🏐",
@@ -102,13 +102,13 @@ export function AlerteMatchEmail({
           <Section style={{ backgroundColor: DARK, borderRadius: "16px 16px 0 0", padding: "32px 36px 28px" }}>
             {/* Logo */}
             <Text style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 800, color: "#ffffff", letterSpacing: "-0.5px" }}>
-              Sport<span style={{ color: GREEN }}>Voisin</span>
+              Sport<span style={{ color: NAVY }}>Voisin</span>
             </Text>
             {/* Badge alerte */}
             <Text style={{
               display: "inline-block", margin: "0 0 14px",
-              backgroundColor: "rgba(45,158,78,0.15)", border: "1px solid rgba(45,158,78,0.4)",
-              color: "#52ff8e", fontSize: 11, fontWeight: 600, letterSpacing: 1.2,
+              backgroundColor: "rgba(30,58,95,0.15)", border: "1px solid rgba(30,58,95,0.4)",
+              color: "#93c5fd", fontSize: 11, fontWeight: 600, letterSpacing: 1.2,
               textTransform: "uppercase", padding: "5px 12px", borderRadius: 99,
             }}>
               🔔 Nouvelle alerte match
@@ -129,7 +129,7 @@ export function AlerteMatchEmail({
               <Column>
                 <Text style={{
                   display: "inline-block", margin: 0,
-                  backgroundColor: DARK, color: "#52ff8e",
+                  backgroundColor: DARK, color: "#93c5fd",
                   fontSize: 12, fontWeight: 600, padding: "5px 12px", borderRadius: 8,
                 }}>
                   {emoji} {sportLabel}
@@ -201,7 +201,7 @@ export function AlerteMatchEmail({
               {(annonce.distance_km || annonce.elevation_m) && (
                 <Row style={{ marginTop: 10, borderTop: `1px solid ${BORDER}`, paddingTop: 10 }}>
                   <Column>
-                    <Text style={{ margin: 0, fontSize: 13, color: GREEN, fontWeight: 500 }}>
+                    <Text style={{ margin: 0, fontSize: 13, color: NAVY, fontWeight: 500 }}>
                       {annonce.distance_km && `🗺 ${annonce.distance_km} km`}
                       {annonce.distance_km && annonce.elevation_m && "  "}
                       {annonce.elevation_m && `⛰ D+${annonce.elevation_m}m`}
@@ -216,7 +216,7 @@ export function AlerteMatchEmail({
               href={annonceUrl}
               style={{
                 display: "block", width: "100%", textAlign: "center",
-                backgroundColor: GREEN, color: "#ffffff",
+                backgroundColor: NAVY, color: "#ffffff",
                 fontSize: 15, fontWeight: 700, borderRadius: 99,
                 padding: "14px 0", textDecoration: "none",
               }}
@@ -226,8 +226,8 @@ export function AlerteMatchEmail({
           </Section>
 
           {/* ── POURQUOI CETTE ALERTE ── */}
-          <Section style={{ backgroundColor: LIGHT_GREEN, border: `1px solid #c8e8d0`, borderTop: "none", padding: "18px 36px" }}>
-            <Text style={{ margin: "0 0 10px", fontSize: 11, fontWeight: 600, color: GREEN, textTransform: "uppercase", letterSpacing: 1 }}>
+          <Section style={{ backgroundColor: NAVY_LIGHT, border: `1px solid #c0d4e8`, borderTop: "none", padding: "18px 36px" }}>
+            <Text style={{ margin: "0 0 10px", fontSize: 11, fontWeight: 600, color: NAVY, textTransform: "uppercase", letterSpacing: 1 }}>
               Pourquoi cette alerte ?
             </Text>
             <Row>
@@ -276,7 +276,7 @@ export function AlerteMatchEmail({
                     </Text>
                   </Column>
                   <Column align="right" style={{ width: 60 }}>
-                    <Link href={`${appUrl}/annonce/${a.id}`} style={{ fontSize: 11, color: GREEN, fontWeight: 600, textDecoration: "none" }}>
+                    <Link href={`${appUrl}/annonce/${a.id}`} style={{ fontSize: 11, color: NAVY, fontWeight: 600, textDecoration: "none" }}>
                       Voir →
                     </Link>
                   </Column>
@@ -296,7 +296,7 @@ export function AlerteMatchEmail({
               {" · "}📍 {alertConfig.radius_km} km
               {" · "}📧 {FREQ_LABEL[alertConfig.frequency] ?? alertConfig.frequency}
             </Text>
-            <Link href={alertesUrl} style={{ fontSize: 12, color: GREEN, fontWeight: 600, textDecoration: "underline" }}>
+            <Link href={alertesUrl} style={{ fontSize: 12, color: NAVY, fontWeight: 600, textDecoration: "underline" }}>
               Modifier mes alertes
             </Link>
             <Text style={{ margin: "14px 0 0", fontSize: 11, color: "#aaa" }}>

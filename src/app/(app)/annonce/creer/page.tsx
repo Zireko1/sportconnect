@@ -142,7 +142,7 @@ export default function CreerAnnoncePage() {
   return (
     <div className="max-w-sm mx-auto">
       {/* Header */}
-      <header className="bg-surface px-4 pt-12 pb-4 border-b border-[#e0ebe2] sticky top-0 z-40">
+      <header className="bg-surface px-4 pt-12 pb-4 border-b border-[#dce6f0] sticky top-0 z-40">
         <div className="flex items-center gap-3">
           {step > 1 && (
             <button
@@ -170,7 +170,7 @@ export default function CreerAnnoncePage() {
                 key={s}
                 className={[
                   "h-1.5 rounded-full transition-all",
-                  s <= step ? "bg-green-alpine w-5" : "bg-[#e0ebe2] w-2",
+                  s <= step ? "bg-navy w-5" : "bg-[#dce6f0] w-2",
                 ].join(" ")}
               />
             ))}
@@ -194,7 +194,7 @@ export default function CreerAnnoncePage() {
                 <button
                   key={s}
                   onClick={() => selectSport(s)}
-                  className="flex items-center gap-2.5 bg-surface border border-[#d1e8d4] hover:border-green-alpine hover:bg-green-light rounded-card px-3 py-3 transition-colors text-left"
+                  className="flex items-center gap-2.5 bg-surface border border-[#c8d9eb] hover:border-navy hover:bg-navy-light rounded-card px-3 py-3 transition-colors text-left"
                 >
                   <span className="text-2xl">{SPORT_EMOJI[s]}</span>
                   <span className="font-dm text-sm font-medium text-text-primary">
@@ -214,7 +214,7 @@ export default function CreerAnnoncePage() {
                 <button
                   key={s}
                   onClick={() => selectSport(s)}
-                  className="flex items-center gap-2.5 bg-surface border border-[#d1e8d4] hover:border-green-alpine hover:bg-green-light rounded-card px-3 py-3 transition-colors text-left"
+                  className="flex items-center gap-2.5 bg-surface border border-[#c8d9eb] hover:border-navy hover:bg-navy-light rounded-card px-3 py-3 transition-colors text-left"
                 >
                   <span className="text-2xl">{SPORT_EMOJI[s]}</span>
                   <span className="font-dm text-sm font-medium text-text-primary">
@@ -226,17 +226,17 @@ export default function CreerAnnoncePage() {
           </div>
 
           {/* Autre sport */}
-          <div className="border-t border-[#e0ebe2] pt-4">
+          <div className="border-t border-[#dce6f0] pt-4">
             {!showAutre ? (
               <button
                 onClick={() => setShowAutre(true)}
-                className="w-full flex items-center gap-2.5 bg-surface border border-dashed border-[#d1e8d4] hover:border-green-alpine hover:bg-green-light rounded-card px-3 py-3 transition-colors text-left"
+                className="w-full flex items-center gap-2.5 bg-surface border border-dashed border-[#c8d9eb] hover:border-navy hover:bg-navy-light rounded-card px-3 py-3 transition-colors text-left"
               >
                 <span className="text-2xl">🏅</span>
                 <span className="font-dm text-sm font-medium text-text-secondary">Autre sport…</span>
               </button>
             ) : (
-              <div className="bg-surface border border-[#e0ebe2] rounded-card p-4 space-y-4">
+              <div className="bg-surface border border-[#dce6f0] rounded-card p-4 space-y-4">
                 <p className="font-syne font-bold text-sm text-text-primary">Quel sport ?</p>
                 <Input
                   label="Nom du sport"
@@ -258,8 +258,8 @@ export default function CreerAnnoncePage() {
                         className={[
                           "flex-1 py-2 rounded-card border font-dm text-sm font-medium transition-all",
                           form.sport_custom_type === type
-                            ? "bg-green-alpine text-white border-green-alpine"
-                            : "bg-background border-[#e0ebe2] text-text-secondary hover:border-green-alpine/40",
+                            ? "bg-navy text-white border-navy"
+                            : "bg-background border-[#dce6f0] text-text-secondary hover:border-navy/40",
                         ].join(" ")}
                       >
                         {type === "collectif" ? "🤝 Collectif" : "🏔 Outdoor"}
@@ -352,8 +352,8 @@ export default function CreerAnnoncePage() {
 
           {/* Champs outdoor */}
           {isOutdoor && (
-            <div className="space-y-4 p-4 bg-green-light rounded-card">
-              <p className="font-dm text-xs font-medium text-green-dark">Détails de la sortie</p>
+            <div className="space-y-4 p-4 bg-navy-light rounded-card">
+              <p className="font-dm text-xs font-medium text-navy-dark">Détails de la sortie</p>
               <div className="grid grid-cols-2 gap-3">
                 <Input
                   label="Distance (km)"
@@ -503,16 +503,16 @@ function AnnoncePreview({
         </div>
 
         {form.description && (
-          <p className="font-dm text-sm text-text-secondary border-t border-[#f0f5f1] pt-2">
+          <p className="font-dm text-sm text-text-secondary border-t border-[#f0f5fb] pt-2">
             {form.description}
           </p>
         )}
 
-        <div className="flex items-center justify-between pt-1 border-t border-[#f0f5f1]">
+        <div className="flex items-center justify-between pt-1 border-t border-[#f0f5fb]">
           <div className="flex items-center gap-2">
             {form.level && <LevelBadge level={form.level} />}
             {spotsLeft > 0 && (
-              <span className="font-dm text-xs text-green-alpine font-medium">
+              <span className="font-dm text-xs text-navy font-medium">
                 {spotsLeft} place{spotsLeft > 1 ? "s" : ""} dispo
               </span>
             )}
@@ -522,7 +522,7 @@ function AnnoncePreview({
               {form.price_per_player}€
             </span>
           ) : (
-            <span className="font-dm text-xs text-green-alpine bg-green-light px-2 py-0.5 rounded-pill">
+            <span className="font-dm text-xs text-navy bg-navy-light px-2 py-0.5 rounded-pill">
               Gratuit
             </span>
           )}

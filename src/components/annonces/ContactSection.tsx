@@ -26,9 +26,9 @@ export function ContactSection({
     <div className="bg-surface rounded-card shadow-card overflow-hidden">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-green-light transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-navy-light transition-colors"
       >
-        <span className="flex items-center gap-2 font-dm text-sm font-medium text-green-alpine">
+        <span className="flex items-center gap-2 font-dm text-sm font-medium text-navy">
           <ChatIcon />
           {label}
         </span>

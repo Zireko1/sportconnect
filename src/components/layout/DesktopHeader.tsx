@@ -16,7 +16,7 @@ export function DesktopHeader({ avatar }: { avatar: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <header className="hidden lg:flex items-center justify-between px-8 h-16 bg-surface border-b border-[#e0ebe2] sticky top-0 z-40">
+    <header className="hidden lg:flex items-center justify-between px-8 h-16 bg-surface border-b border-[#dce6f0] sticky top-0 z-40">
       {/* Logo */}
       <Logo />
 
@@ -31,7 +31,7 @@ export function DesktopHeader({ avatar }: { avatar: React.ReactNode }) {
               className={[
                 "font-dm text-sm transition-colors",
                 active
-                  ? "text-green-alpine font-medium"
+                  ? "text-navy font-medium"
                   : "text-text-secondary hover:text-text-primary",
               ].join(" ")}
             >
@@ -45,7 +45,7 @@ export function DesktopHeader({ avatar }: { avatar: React.ReactNode }) {
       <div className="flex items-center gap-4">
         <Link
           href="/annonce/creer"
-          className="font-dm text-sm font-medium bg-green-alpine text-white px-4 py-2 rounded-pill hover:bg-green-dark transition-colors"
+          className="font-dm text-sm font-medium bg-navy text-white px-4 py-2 rounded-pill hover:bg-navy-dark transition-colors"
         >
           + Publier
         </Link>

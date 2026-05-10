@@ -9,7 +9,7 @@ function Card({ highlighted, className = "", children, ...props }: CardProps) {
     <div
       className={[
         "bg-surface rounded-card shadow-card",
-        highlighted ? "border border-green-alpine/40" : "",
+        highlighted ? "border border-navy/40" : "",
         className,
       ].join(" ")}
       {...props}

@@ -34,7 +34,7 @@ export function SearchBar() {
         value={query}
         onChange={handleChange}
         placeholder="Chercher un sport, une ville…"
-        className="w-full font-dm text-sm text-text-primary bg-background border border-[#d1e8d4] rounded-pill pl-9 pr-4 py-2.5 placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-green-alpine focus:border-transparent transition-colors"
+        className="w-full font-dm text-sm text-text-primary bg-background border border-[#c8d9eb] rounded-pill pl-9 pr-4 py-2.5 placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-navy focus:border-transparent transition-colors"
       />
     </div>
   );

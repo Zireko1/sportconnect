@@ -150,14 +150,14 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
   return (
     <div className="flex flex-col" style={{ height: 320 }}>
       {/* Context label */}
-      <div className="px-4 py-2 border-b border-[#e0ebe2] bg-[#f0f8f2]">
+      <div className="px-4 py-2 border-b border-[#dce6f0] bg-[#f0f5fb]">
         <p className="font-dm text-xs text-text-secondary truncate">
           À propos de <span className="font-medium text-text-primary">{annonceTitle}</span>
         </p>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 bg-[#f8faf6]">
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 bg-[#f6f8fa]">
         {loading && (
           <p className="font-dm text-xs text-text-secondary text-center mt-4">Chargement…</p>
         )}
@@ -174,8 +174,8 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
                 className={[
                   "max-w-[75%] px-3 py-2 rounded-2xl font-dm text-sm leading-relaxed break-words",
                   isMine
-                    ? "bg-[#2d9e4e] text-white rounded-br-sm"
-                    : "bg-white border border-[#e0ebe2] text-text-primary rounded-bl-sm shadow-sm",
+                    ? "bg-[#1e3a5f] text-white rounded-br-sm"
+                    : "bg-white border border-[#dce6f0] text-text-primary rounded-bl-sm shadow-sm",
                 ].join(" ")}
               >
                 {msg.content}
@@ -197,10 +197,10 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
       </div>
 
       {/* Input */}
-      <div className="border-t border-[#e0ebe2] px-3 py-2.5 flex items-end gap-2 bg-white">
+      <div className="border-t border-[#dce6f0] px-3 py-2.5 flex items-end gap-2 bg-white">
         <textarea
           ref={textareaRef}
-          className="flex-1 font-dm text-sm text-text-primary bg-[#f8faf6] border border-[#e0ebe2] rounded-xl px-3 py-2 resize-none focus:outline-none focus:border-green-alpine placeholder:text-text-secondary/60 leading-relaxed"
+          className="flex-1 font-dm text-sm text-text-primary bg-[#f6f8fa] border border-[#dce6f0] rounded-xl px-3 py-2 resize-none focus:outline-none focus:border-navy placeholder:text-text-secondary/60 leading-relaxed"
           placeholder="Votre message…"
           value={input}
           onChange={handleInput}
@@ -212,7 +212,7 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
           onClick={send}
           disabled={!input.trim() || sending}
           aria-label="Envoyer"
-          className="flex-shrink-0 w-9 h-9 bg-green-alpine rounded-full flex items-center justify-center disabled:opacity-40 hover:bg-green-dark transition-colors"
+          className="flex-shrink-0 w-9 h-9 bg-navy rounded-full flex items-center justify-center disabled:opacity-40 hover:bg-navy-dark transition-colors"
         >
           <SendIcon />
         </button>

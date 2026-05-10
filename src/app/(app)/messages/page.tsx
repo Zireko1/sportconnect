@@ -96,7 +96,7 @@ export default async function MessagesPage() {
       <div className="flex items-center gap-3 mb-6">
         <h1 className="font-syne font-bold text-2xl text-text-primary">Messages</h1>
         {totalUnread > 0 && (
-          <span className="bg-green-alpine text-white font-dm text-xs font-bold px-2 py-0.5 rounded-full">
+          <span className="bg-navy text-white font-dm text-xs font-bold px-2 py-0.5 rounded-full">
             {totalUnread}
           </span>
         )}
@@ -104,7 +104,7 @@ export default async function MessagesPage() {
 
       {conversations.length === 0 ? (
         <div className="text-center py-20">
-          <div className="w-14 h-14 bg-green-light rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-14 h-14 bg-navy-light rounded-full flex items-center justify-center mx-auto mb-4">
             <ChatEmptyIcon />
           </div>
           <p className="font-syne font-bold text-text-primary mb-1">Aucun message</p>
@@ -113,7 +113,7 @@ export default async function MessagesPage() {
           </p>
           <Link
             href="/"
-            className="font-dm text-sm text-green-alpine hover:text-green-dark transition-colors"
+            className="font-dm text-sm text-navy hover:text-navy-dark transition-colors"
           >
             Explorer les annonces →
           </Link>
@@ -141,10 +141,10 @@ export default async function MessagesPage() {
               <Link
                 key={conv.key}
                 href={href}
-                className="flex items-center gap-3 bg-surface rounded-card shadow-card p-4 hover:bg-green-light transition-colors"
+                className="flex items-center gap-3 bg-surface rounded-card shadow-card p-4 hover:bg-navy-light transition-colors"
               >
                 {/* Avatar */}
-                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-green-alpine flex items-center justify-center overflow-hidden">
+                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-navy flex items-center justify-center overflow-hidden">
                   {conv.interlocutorAvatar ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -183,7 +183,7 @@ export default async function MessagesPage() {
                       {conv.lastMessage.content}
                     </p>
                     {hasUnread && (
-                      <span className="flex-shrink-0 min-w-[20px] h-5 bg-green-alpine rounded-full flex items-center justify-center px-1">
+                      <span className="flex-shrink-0 min-w-[20px] h-5 bg-navy rounded-full flex items-center justify-center px-1">
                         <span className="font-dm text-[10px] font-bold text-white">
                           {conv.unreadCount}
                         </span>
@@ -207,7 +207,7 @@ function ChatEmptyIcon() {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#2d9e4e"
+      stroke="#1e3a5f"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

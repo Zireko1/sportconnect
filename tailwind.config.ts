@@ -9,12 +9,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#f8faf6",
+        background: "#f6f8fa",
         surface: "#ffffff",
-        "green-alpine": "#2d9e4e",
-        "green-dark": "#1a5c2e",
-        "green-light": "#e8f5ec",
-        "text-primary": "#1a2e1a",
+        "navy": "#1e3a5f",
+        "navy-dark": "#122840",
+        "navy-light": "#eef2f7",
+        "text-primary": "#1a2e40",
         "text-secondary": "#666666",
       },
       fontFamily: {
