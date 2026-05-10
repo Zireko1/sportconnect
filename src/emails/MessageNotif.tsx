@@ -95,7 +95,7 @@ export function MessageNotifEmail({
                 margin: "0 0 20px",
               }}
             >
-              <strong>{senderName}</strong> vous a envoyé un message à propos de l'annonce{" "}
+              <strong>{senderName}</strong> vous a envoyé un message à propos de l&apos;annonce{" "}
               <strong>« {annonceTitle} »</strong> :
             </Text>
 
