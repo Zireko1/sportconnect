@@ -290,6 +290,57 @@ export type Database = {
           }
         ];
       };
+      avis_annonces: {
+        Row: {
+          id: string;
+          reviewer_id: string;
+          annonce_id: string;
+          note: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          reviewer_id: string;
+          annonce_id: string;
+          note: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          reviewer_id?: string;
+          annonce_id?: string;
+          note?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      avis_joueurs: {
+        Row: {
+          id: string;
+          reviewer_id: string;
+          reviewed_id: string;
+          annonce_id: string;
+          note: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          reviewer_id: string;
+          reviewed_id: string;
+          annonce_id: string;
+          note: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          reviewer_id?: string;
+          reviewed_id?: string;
+          annonce_id?: string;
+          note?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

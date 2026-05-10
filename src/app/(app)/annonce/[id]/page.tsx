@@ -5,6 +5,8 @@ import { SportBadge, StatusBadge } from "@/components/ui/Badge";
 import { JoinButton } from "@/components/annonces/JoinButton";
 import { ShareButton } from "@/components/annonces/ShareButton";
 import { ContactSection } from "@/components/annonces/ContactSection";
+import { StarRating } from "@/components/ui/StarRating";
+import { submitAvisAnnonce } from "@/lib/actions/avis";
 import type { Database } from "@/types/database";
 
 type AnnonceDetail = Database["public"]["Tables"]["annonces"]["Row"] & {
@@ -53,13 +55,42 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
     ? supabase.from("users").select("name").eq("id", withUser).single()
     : Promise.resolve({ data: null });
 
-  const [{ data: inscription }, { data: chatPartnerRow }] = await Promise.all([
-    fetchInscription,
-    fetchChatPartner,
-  ]);
+  const isPast = new Date(ann.date_time) < new Date();
+
+  const fetchAvisAnnonce = supabase
+    .from("avis_annonces")
+    .select("note")
+    .eq("annonce_id", id);
+
+  const fetchMyAvis =
+    isPast && user
+      ? supabase
+          .from("avis_annonces")
+          .select("note")
+          .eq("annonce_id", id)
+          .eq("reviewer_id", user.id)
+          .maybeSingle()
+      : Promise.resolve({ data: null });
+
+  const [
+    { data: inscription },
+    { data: chatPartnerRow },
+    { data: avisAnnonceData },
+    { data: myAvisRaw },
+  ] = await Promise.all([fetchInscription, fetchChatPartner, fetchAvisAnnonce, fetchMyAvis]);
 
   if (inscription) isInscrit = true;
   if (chatPartnerRow) chatPartnerName = chatPartnerRow.name;
+
+  const allAvisAnnonce = (avisAnnonceData ?? []) as { note: number }[];
+  const avgAnnonceNote =
+    allAvisAnnonce.length > 0
+      ? allAvisAnnonce.reduce((sum, a) => sum + a.note, 0) / allAvisAnnonce.length
+      : null;
+  const avisAnnonceCount = allAvisAnnonce.length;
+  const myExistingNote = myAvisRaw ? (myAvisRaw as { note: number }).note : null;
+  const canRateAnnonce = isPast && (isInscrit || isOrganizer) && !!user;
+  const rateAnnonceAction = submitAvisAnnonce.bind(null, id);
 
   // Determine chat state
   let chatPartnerId: string | null = null;
@@ -147,6 +178,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
         {/* Organisateur */}
         <div className="mx-4 mb-4">
           <OrganizerCard
+            organizerId={ann.organizer_id}
             organizerName={organizerName}
             initials={initials}
             avatarUrl={ann.users?.avatar_url ?? null}
@@ -172,6 +204,34 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
         <div className="mx-4 mb-4">
           <MapPlaceholder locationName={ann.location_name} city={ann.city} />
         </div>
+
+        {/* Évaluations */}
+        {(avgAnnonceNote !== null || canRateAnnonce) && (
+          <div className="mx-4 mb-4 bg-surface rounded-card shadow-card p-4">
+            <p className="font-syne font-bold text-sm text-text-primary mb-3">Évaluations</p>
+            {avgAnnonceNote !== null && (
+              <div className="mb-3">
+                <StarRating
+                  mode="display"
+                  average={avgAnnonceNote}
+                  count={avisAnnonceCount}
+                />
+              </div>
+            )}
+            {canRateAnnonce && (
+              <>
+                <p className="font-dm text-xs text-text-secondary mb-2">
+                  {myExistingNote !== null ? "Votre note" : "Notez cet événement"}
+                </p>
+                <StarRating
+                  mode="interactive"
+                  action={rateAnnonceAction}
+                  existing={myExistingNote ?? undefined}
+                />
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ===== MOBILE CTA fixe (< lg) ===== */}
@@ -227,6 +287,34 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
 
             {/* Carte */}
             <MapPlaceholder locationName={ann.location_name} city={ann.city} />
+
+            {/* Évaluations */}
+            {(avgAnnonceNote !== null || canRateAnnonce) && (
+              <div className="bg-surface rounded-card shadow-card p-6">
+                <p className="font-syne font-bold text-sm text-text-primary mb-3">Évaluations</p>
+                {avgAnnonceNote !== null && (
+                  <div className="mb-3">
+                    <StarRating
+                      mode="display"
+                      average={avgAnnonceNote}
+                      count={avisAnnonceCount}
+                    />
+                  </div>
+                )}
+                {canRateAnnonce && (
+                  <>
+                    <p className="font-dm text-xs text-text-secondary mb-2">
+                      {myExistingNote !== null ? "Votre note" : "Notez cet événement"}
+                    </p>
+                    <StarRating
+                      mode="interactive"
+                      action={rateAnnonceAction}
+                      existing={myExistingNote ?? undefined}
+                    />
+                  </>
+                )}
+              </div>
+            )}
           </main>
 
           {/* Sidebar droite */}
@@ -239,6 +327,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
 
             {/* Organisateur */}
             <OrganizerCard
+              organizerId={ann.organizer_id}
               organizerName={organizerName}
               initials={initials}
               avatarUrl={ann.users?.avatar_url ?? null}
@@ -405,11 +494,13 @@ function SpotsVisualization({ filled, total }: { filled: number; total: number }
 }
 
 function OrganizerCard({
+  organizerId,
   organizerName,
   initials,
   avatarUrl,
   matchesOrganized,
 }: {
+  organizerId: string;
   organizerName: string;
   initials: string;
   avatarUrl: string | null;
@@ -418,7 +509,7 @@ function OrganizerCard({
   return (
     <div className="bg-surface rounded-card shadow-card p-4">
       <p className="font-syne font-bold text-sm text-text-primary mb-3">Organisateur</p>
-      <div className="flex items-center gap-3">
+      <Link href={`/profil/${organizerId}`} className="flex items-center gap-3 group">
         {avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -432,7 +523,7 @@ function OrganizerCard({
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <p className="font-syne font-bold text-text-primary text-sm truncate">
+          <p className="font-syne font-bold text-text-primary text-sm truncate group-hover:text-green-alpine transition-colors">
             {organizerName}
           </p>
           <p className="font-dm text-xs text-text-secondary">
@@ -440,7 +531,7 @@ function OrganizerCard({
             {matchesOrganized > 1 ? "s" : ""}
           </p>
         </div>
-      </div>
+      </Link>
     </div>
   );
 }

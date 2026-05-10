@@ -43,7 +43,7 @@ export default async function ProfilPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/connexion");
 
-  const [{ data: profile }, { data: annonces }] = await Promise.all([
+  const [{ data: profile }, { data: annonces }, { data: avisRecu }] = await Promise.all([
     supabase.from("users").select("*").eq("id", user.id).single(),
     supabase
       .from("annonces")
@@ -51,9 +51,19 @@ export default async function ProfilPage() {
       .eq("organizer_id", user.id)
       .order("date_time", { ascending: false })
       .limit(20),
+    supabase.from("avis_joueurs").select("note").eq("reviewed_id", user.id),
   ]);
 
   const p = profile as UserRow | null;
+
+  const allAvisRecu = (avisRecu ?? []) as { note: number }[];
+  const avgNote =
+    allAvisRecu.length > 0
+      ? allAvisRecu.reduce((sum, a) => sum + a.note, 0) / allAvisRecu.length
+      : null;
+  const avgNoteDisplay =
+    avgNote !== null ? `${(Math.round(avgNote * 10) / 10).toFixed(1)}` : null;
+
   const myAnnonces = (annonces ?? []) as Pick<
     AnnonceRow,
     "id" | "title" | "sport" | "date_time" | "city" | "status" | "total_spots" | "filled_spots"
@@ -91,6 +101,14 @@ export default async function ProfilPage() {
           <p className="font-dm text-sm text-text-secondary truncate">{user.email}</p>
           {p?.city && (
             <p className="font-dm text-sm text-text-secondary mt-0.5">📍 {p.city}</p>
+          )}
+          {avgNoteDisplay !== null && (
+            <p className="font-dm text-sm text-text-secondary mt-1">
+              ⭐ {avgNoteDisplay} —{" "}
+              <span className="text-text-secondary">
+                {allAvisRecu.length} avis
+              </span>
+            </p>
           )}
         </div>
       </div>
