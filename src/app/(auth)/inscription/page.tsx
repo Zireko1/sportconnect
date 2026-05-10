@@ -43,7 +43,7 @@ export default function InscriptionPage() {
     setError(null);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -53,15 +53,38 @@ export default function InscriptionPage() {
     });
 
     if (error) {
+      console.error("[inscription] supabase.auth.signUp error:", {
+        message: error.message,
+        status: error.status,
+        name: error.name,
+        cause: error.cause,
+      });
+
+      const msg = error.message.toLowerCase();
+      const isAlreadyExists =
+        msg.includes("already registered") ||
+        msg.includes("already in use") ||
+        msg.includes("user already") ||
+        error.status === 422;
+
       setError(
-        error.message.includes("already registered")
+        isAlreadyExists
           ? "Un compte existe déjà avec cet email."
-          : "Erreur lors de l'inscription. Réessaie."
+          : `Erreur lors de l'inscription. Réessaie. (${error.message})`
       );
       setLoading(false);
       return;
     }
 
+    // Supabase peut retourner success mais sans session si l'email est déjà confirmé
+    if (signUpData.user && !signUpData.session && signUpData.user.identities?.length === 0) {
+      console.warn("[inscription] Utilisateur déjà existant (identities vides) :", signUpData.user.id);
+      setError("Un compte existe déjà avec cet email.");
+      setLoading(false);
+      return;
+    }
+
+    console.log("[inscription] signUp OK, userId:", signUpData.user?.id);
     router.push("/inscription/confirmation");
   }
 
