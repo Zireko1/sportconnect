@@ -79,7 +79,7 @@ export function AnnonceFilters({ variant = "default" }: AnnonceFiltersProps) {
   }
 
   return (
-    <div className="space-y-3 px-4 py-3 bg-surface border-b border-[#dce6f0]">
+    <div className="space-y-3 px-4 py-3 bg-surface border-b border-[#e0ebe2]">
       {/* Filtre sport — scroll horizontal */}
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         <FilterPill
@@ -132,8 +132,8 @@ function FilterPill({
         "flex-shrink-0 rounded-pill font-dm transition-colors whitespace-nowrap",
         size === "sm" ? "px-3 py-1 text-xs" : "px-3 py-1.5 text-sm",
         active
-          ? "bg-navy text-white"
-          : "bg-navy-light text-navy-dark hover:bg-navy/20",
+          ? "bg-green-alpine text-white"
+          : "bg-green-light text-green-dark hover:bg-green-alpine/20",
       ].join(" ")}
     >
       {children}

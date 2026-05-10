@@ -163,15 +163,15 @@ export default function InscriptionPage() {
             </form>
 
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-[#dce6f0]" />
+              <div className="flex-1 h-px bg-[#e0ebe2]" />
               <span className="font-dm text-xs text-text-secondary">ou</span>
-              <div className="flex-1 h-px bg-[#dce6f0]" />
+              <div className="flex-1 h-px bg-[#e0ebe2]" />
             </div>
 
             <button
               onClick={handleGoogleSignup}
               disabled={googleLoading}
-              className="w-full flex items-center justify-center gap-3 bg-surface border border-[#c8d9eb] hover:border-navy/60 rounded-card px-4 py-3 font-dm text-sm font-medium text-text-primary transition-colors disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-3 bg-surface border border-[#d1e8d4] hover:border-green-alpine/60 rounded-card px-4 py-3 font-dm text-sm font-medium text-text-primary transition-colors disabled:opacity-50"
             >
               <GoogleIcon />
               {googleLoading ? "Redirection…" : "S'inscrire avec Google"}
@@ -179,7 +179,7 @@ export default function InscriptionPage() {
 
             <p className="font-dm text-sm text-text-secondary text-center">
               Déjà un compte ?{" "}
-              <a href="/connexion" className="text-navy hover:text-navy-dark font-medium">
+              <a href="/connexion" className="text-green-alpine hover:text-green-dark font-medium">
                 Se connecter
               </a>
             </p>
@@ -198,8 +198,8 @@ export default function InscriptionPage() {
                   className={[
                     "flex items-center gap-2 px-3 py-2.5 rounded-card border font-dm text-sm transition-colors text-left",
                     selectedSports.includes(sport)
-                      ? "bg-navy text-white border-navy"
-                      : "bg-surface text-text-primary border-[#c8d9eb] hover:border-navy/60",
+                      ? "bg-green-alpine text-white border-green-alpine"
+                      : "bg-surface text-text-primary border-[#d1e8d4] hover:border-green-alpine/60",
                   ].join(" ")}
                 >
                   <span>{SPORT_EMOJI[sport]}</span>

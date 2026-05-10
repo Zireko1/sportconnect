@@ -7,9 +7,9 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  sport: "bg-navy-light text-navy-dark",
+  sport: "bg-green-light text-green-dark",
   level: "bg-[#e8f0fe] text-[#1a3c8e]",
-  status: "bg-navy/10 text-navy-dark",
+  status: "bg-green-alpine/10 text-green-dark",
   city: "bg-[#f0f0f0] text-text-secondary",
 };
 
@@ -75,7 +75,7 @@ function LevelBadge({ level }: { level: string }) {
 
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { label: string; className: string }> = {
-    open: { label: "Places dispo", className: "bg-navy/10 text-navy-dark" },
+    open: { label: "Places dispo", className: "bg-green-alpine/10 text-green-dark" },
     full: { label: "Complet", className: "bg-orange-100 text-orange-700" },
     cancelled: { label: "Annulé", className: "bg-red-100 text-red-600" },
     completed: { label: "Terminé", className: "bg-[#f0f0f0] text-text-secondary" },

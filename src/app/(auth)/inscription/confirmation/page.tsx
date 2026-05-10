@@ -4,8 +4,8 @@ export default function ConfirmationPage() {
   return (
     <Card>
       <CardBody className="p-6 text-center space-y-4">
-        <div className="w-14 h-14 bg-navy-light rounded-full flex items-center justify-center mx-auto">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <div className="w-14 h-14 bg-green-light rounded-full flex items-center justify-center mx-auto">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2d9e4e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 6L9 17l-5-5" />
           </svg>
         </div>
@@ -17,7 +17,7 @@ export default function ConfirmationPage() {
         </div>
         <p className="font-dm text-xs text-text-secondary">
           Pas reçu ?{" "}
-          <a href="/inscription" className="text-navy hover:text-navy-dark">
+          <a href="/inscription" className="text-green-alpine hover:text-green-dark">
             Réessayer
           </a>
         </p>

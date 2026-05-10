@@ -95,7 +95,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
   return (
     <>
       {/* ===== MOBILE HEADER (< lg) ===== */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-surface border-b border-[#dce6f0] flex items-center justify-between px-4 h-14">
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-surface border-b border-[#e0ebe2] flex items-center justify-between px-4 h-14">
         <Link
           href="/"
           className="flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition-colors"
@@ -175,7 +175,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
       </div>
 
       {/* ===== MOBILE CTA fixe (< lg) ===== */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-sm border-t border-[#dce6f0] px-4 py-3 safe-bottom">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-sm border-t border-[#e0ebe2] px-4 py-3 safe-bottom">
         <JoinButton {...joinProps} />
       </div>
 
@@ -309,8 +309,8 @@ function InfoChips({
 
 function Chip({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="inline-flex items-center gap-1.5 bg-background border border-[#dce6f0] rounded-card px-3 py-2">
-      <span className="text-navy flex-shrink-0">{icon}</span>
+    <div className="inline-flex items-center gap-1.5 bg-background border border-[#e0ebe2] rounded-card px-3 py-2">
+      <span className="text-green-alpine flex-shrink-0">{icon}</span>
       <span className="font-dm text-sm text-text-primary">{children}</span>
     </div>
   );
@@ -359,8 +359,8 @@ function SpotsVisualization({ filled, total }: { filled: number; total: number }
               className={[
                 "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
                 occupied
-                  ? "bg-navy shadow-sm"
-                  : "bg-navy-light border border-[#b8cfe8]",
+                  ? "bg-green-alpine shadow-sm"
+                  : "bg-green-light border border-[#c8e6cf]",
               ].join(" ")}
             >
               <svg
@@ -368,7 +368,7 @@ function SpotsVisualization({ filled, total }: { filled: number; total: number }
                 height="14"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke={occupied ? "white" : "#1e3a5f"}
+                stroke={occupied ? "white" : "#2d9e4e"}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -381,20 +381,20 @@ function SpotsVisualization({ filled, total }: { filled: number; total: number }
           );
         })}
         {extra > 0 && (
-          <div className="w-8 h-8 rounded-full bg-[#f0f5fb] border border-[#dce6f0] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-[#f0f5f1] border border-[#e0ebe2] flex items-center justify-center">
             <span className="font-dm text-[10px] font-medium text-text-secondary">+{extra}</span>
           </div>
         )}
       </div>
       <div className="flex items-center gap-5">
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-navy" />
+          <div className="w-2.5 h-2.5 rounded-full bg-green-alpine" />
           <span className="font-dm text-xs text-text-secondary">
             {filled} inscrit{filled > 1 ? "s" : ""}
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-navy-light border border-[#b8cfe8]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-green-light border border-[#c8e6cf]" />
           <span className="font-dm text-xs text-text-secondary">
             {total - filled} libre{total - filled !== 1 ? "s" : ""}
           </span>
@@ -424,10 +424,10 @@ function OrganizerCard({
           <img
             src={avatarUrl}
             alt={organizerName}
-            className="w-12 h-12 rounded-full object-cover border-2 border-navy-light flex-shrink-0"
+            className="w-12 h-12 rounded-full object-cover border-2 border-green-light flex-shrink-0"
           />
         ) : (
-          <div className="w-12 h-12 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 rounded-full bg-green-alpine flex items-center justify-center flex-shrink-0">
             <span className="font-syne font-bold text-white text-sm">{initials}</span>
           </div>
         )}
@@ -448,40 +448,40 @@ function OrganizerCard({
 function MapPlaceholder({ locationName, city }: { locationName: string; city: string }) {
   return (
     <div className="bg-surface rounded-card shadow-card overflow-hidden">
-      <div className="px-4 py-3 border-b border-[#dce6f0] flex items-center justify-between">
+      <div className="px-4 py-3 border-b border-[#e0ebe2] flex items-center justify-between">
         <div className="min-w-0">
           <p className="font-syne font-bold text-sm text-text-primary truncate">{locationName}</p>
           <p className="font-dm text-xs text-text-secondary">{city}</p>
         </div>
-        <span className="font-dm text-[10px] font-medium bg-navy/10 text-navy-dark px-2 py-0.5 rounded-pill ml-2 flex-shrink-0">
+        <span className="font-dm text-[10px] font-medium bg-green-alpine/10 text-green-dark px-2 py-0.5 rounded-pill ml-2 flex-shrink-0">
           Carte
         </span>
       </div>
-      <div className="relative h-44 bg-[#eef2f7] overflow-hidden">
+      <div className="relative h-44 bg-[#e8f5ec] overflow-hidden">
         <svg
           className="absolute inset-0 w-full h-full"
           viewBox="0 0 320 176"
           preserveAspectRatio="xMidYMid slice"
         >
           {[28, 56, 84, 112, 140].map((y) => (
-            <line key={`h${y}`} x1="0" y1={y} x2="320" y2={y} stroke="#1e3a5f" strokeWidth="0.5" opacity="0.15" />
+            <line key={`h${y}`} x1="0" y1={y} x2="320" y2={y} stroke="#2d9e4e" strokeWidth="0.5" opacity="0.15" />
           ))}
           {[40, 80, 120, 160, 200, 240, 280].map((x) => (
-            <line key={`v${x}`} x1={x} y1="0" x2={x} y2="176" stroke="#1e3a5f" strokeWidth="0.5" opacity="0.15" />
+            <line key={`v${x}`} x1={x} y1="0" x2={x} y2="176" stroke="#2d9e4e" strokeWidth="0.5" opacity="0.15" />
           ))}
-          <path d="M0 88 C60 75 150 105 320 85" stroke="#1e3a5f" strokeWidth="3" fill="none" opacity="0.2" strokeLinecap="round" />
-          <path d="M0 48 C80 58 200 42 320 52" stroke="#1e3a5f" strokeWidth="1.5" fill="none" opacity="0.15" strokeLinecap="round" />
-          <path d="M150 0 C144 52 158 128 152 176" stroke="#1e3a5f" strokeWidth="2" fill="none" opacity="0.18" strokeLinecap="round" />
-          <ellipse cx="110" cy="85" rx="28" ry="18" fill="#1e3a5f" opacity="0.06" />
+          <path d="M0 88 C60 75 150 105 320 85" stroke="#2d9e4e" strokeWidth="3" fill="none" opacity="0.2" strokeLinecap="round" />
+          <path d="M0 48 C80 58 200 42 320 52" stroke="#2d9e4e" strokeWidth="1.5" fill="none" opacity="0.15" strokeLinecap="round" />
+          <path d="M150 0 C144 52 158 128 152 176" stroke="#2d9e4e" strokeWidth="2" fill="none" opacity="0.18" strokeLinecap="round" />
+          <ellipse cx="110" cy="85" rx="28" ry="18" fill="#2d9e4e" opacity="0.06" />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
           <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-md">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d9e4e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
           </div>
-          <p className="font-dm text-xs font-medium text-navy-dark bg-white/80 px-3 py-1 rounded-pill shadow-sm max-w-[200px] text-center truncate">
+          <p className="font-dm text-xs font-medium text-green-dark bg-white/80 px-3 py-1 rounded-pill shadow-sm max-w-[200px] text-center truncate">
             {locationName}
           </p>
         </div>

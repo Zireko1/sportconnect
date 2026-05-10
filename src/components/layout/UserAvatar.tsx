@@ -15,7 +15,7 @@ export async function UserAvatar() {
     return (
       <Link
         href="/connexion"
-        className="font-dm text-sm font-medium text-navy hover:text-navy-dark transition-colors"
+        className="font-dm text-sm font-medium text-green-alpine hover:text-green-dark transition-colors"
       >
         Connexion
       </Link>
@@ -46,10 +46,10 @@ export async function UserAvatar() {
         <img
           src={profile.avatar_url}
           alt={profile.name}
-          className="w-9 h-9 rounded-full object-cover border-2 border-navy-light"
+          className="w-9 h-9 rounded-full object-cover border-2 border-green-light"
         />
       ) : (
-        <div className="w-9 h-9 rounded-full bg-navy flex items-center justify-center">
+        <div className="w-9 h-9 rounded-full bg-green-alpine flex items-center justify-center">
           <span className="font-syne font-bold text-white text-xs">{initials}</span>
         </div>
       )}

@@ -90,7 +90,7 @@ export default function ConnexionPage() {
             <div className="text-right">
               <a
                 href="/mot-de-passe-oublie"
-                className="font-dm text-xs text-navy hover:text-navy-dark"
+                className="font-dm text-xs text-green-alpine hover:text-green-dark"
               >
                 Mot de passe oublié ?
               </a>
@@ -103,15 +103,15 @@ export default function ConnexionPage() {
         </form>
 
         <div className="flex items-center gap-3">
-          <div className="flex-1 h-px bg-[#dce6f0]" />
+          <div className="flex-1 h-px bg-[#e0ebe2]" />
           <span className="font-dm text-xs text-text-secondary">ou</span>
-          <div className="flex-1 h-px bg-[#dce6f0]" />
+          <div className="flex-1 h-px bg-[#e0ebe2]" />
         </div>
 
         <button
           onClick={handleGoogleLogin}
           disabled={googleLoading}
-          className="w-full flex items-center justify-center gap-3 bg-surface border border-[#c8d9eb] hover:border-navy/60 rounded-card px-4 py-3 font-dm text-sm font-medium text-text-primary transition-colors disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-3 bg-surface border border-[#d1e8d4] hover:border-green-alpine/60 rounded-card px-4 py-3 font-dm text-sm font-medium text-text-primary transition-colors disabled:opacity-50"
         >
           <GoogleIcon />
           {googleLoading ? "Redirection…" : "Continuer avec Google"}
@@ -119,7 +119,7 @@ export default function ConnexionPage() {
 
         <p className="font-dm text-sm text-text-secondary text-center">
           Pas encore de compte ?{" "}
-          <a href="/inscription" className="text-navy hover:text-navy-dark font-medium">
+          <a href="/inscription" className="text-green-alpine hover:text-green-dark font-medium">
             S&apos;inscrire
           </a>
         </p>

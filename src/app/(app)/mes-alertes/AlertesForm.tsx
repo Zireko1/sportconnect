@@ -148,10 +148,10 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
         <div className="space-y-4">
 
           {/* Master toggle */}
-          <div className="bg-surface rounded-card border border-[#dce6f0] p-4 shadow-card">
+          <div className="bg-surface rounded-card border border-[#e0ebe2] p-4 shadow-card">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-navy-light flex items-center justify-center flex-shrink-0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <div className="w-10 h-10 rounded-xl bg-green-light flex items-center justify-center flex-shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d9e4e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                 </svg>
               </div>
@@ -165,7 +165,7 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
                 onClick={() => set("active", !cfg.active)}
                 className={[
                   "relative w-11 h-6 rounded-full transition-colors flex-shrink-0",
-                  cfg.active ? "bg-navy" : "bg-[#d1d5db]",
+                  cfg.active ? "bg-green-alpine" : "bg-[#d1d5db]",
                 ].join(" ")}
                 aria-label="Toggle alertes"
               >
@@ -178,7 +178,7 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
           </div>
 
           {/* Sports */}
-          <div className={["bg-surface rounded-card border border-[#dce6f0] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
+          <div className={["bg-surface rounded-card border border-[#e0ebe2] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
             <SectionTitle>Sports à surveiller</SectionTitle>
             <p className="font-dm text-xs text-text-secondary mb-3">
               {cfg.sports.length === 0 ? "Sélectionne au moins un sport" : `${cfg.sports.length} sport${cfg.sports.length > 1 ? "s" : ""} sélectionné${cfg.sports.length > 1 ? "s" : ""}`}
@@ -193,17 +193,17 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
                     className={[
                       "relative flex flex-col items-center gap-1 py-3 px-1 rounded-card border transition-all text-center",
                       on
-                        ? "bg-navy-light border-navy shadow-sm"
-                        : "bg-background border-[#dce6f0] hover:border-navy/40",
+                        ? "bg-green-light border-green-alpine shadow-sm"
+                        : "bg-background border-[#e0ebe2] hover:border-green-alpine/40",
                     ].join(" ")}
                   >
                     {on && (
-                      <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-navy rounded-full flex items-center justify-center">
+                      <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-green-alpine rounded-full flex items-center justify-center">
                         <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
                       </span>
                     )}
                     <span className="text-xl">{SPORT_EMOJI[sport]}</span>
-                    <span className={["font-dm text-[11px] leading-tight", on ? "text-navy-dark font-medium" : "text-text-secondary"].join(" ")}>
+                    <span className={["font-dm text-[11px] leading-tight", on ? "text-green-dark font-medium" : "text-text-secondary"].join(" ")}>
                       {SPORT_LABEL[sport]}
                     </span>
                   </button>
@@ -213,10 +213,10 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
           </div>
 
           {/* Radius */}
-          <div className={["bg-surface rounded-card border border-[#dce6f0] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
+          <div className={["bg-surface rounded-card border border-[#e0ebe2] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
             <div className="flex items-baseline justify-between mb-3">
               <SectionTitle>Rayon géographique</SectionTitle>
-              <span className="font-syne font-bold text-xl text-navy">{cfg.radius_km} <span className="text-sm font-dm font-normal text-text-secondary">km</span></span>
+              <span className="font-syne font-bold text-xl text-green-alpine">{cfg.radius_km} <span className="text-sm font-dm font-normal text-text-secondary">km</span></span>
             </div>
             <input
               type="range"
@@ -226,23 +226,23 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
               value={cfg.radius_km}
               onChange={(e) => set("radius_km", parseInt(e.target.value))}
               className="w-full h-1.5 rounded-full appearance-none cursor-pointer
-                bg-[#dce6f0]
+                bg-[#e0ebe2]
                 [&::-webkit-slider-thumb]:appearance-none
                 [&::-webkit-slider-thumb]:w-5
                 [&::-webkit-slider-thumb]:h-5
                 [&::-webkit-slider-thumb]:rounded-full
-                [&::-webkit-slider-thumb]:bg-navy
+                [&::-webkit-slider-thumb]:bg-green-alpine
                 [&::-webkit-slider-thumb]:shadow-md
                 [&::-webkit-slider-thumb]:border-2
                 [&::-webkit-slider-thumb]:border-white
                 [&::-moz-range-thumb]:w-5
                 [&::-moz-range-thumb]:h-5
                 [&::-moz-range-thumb]:rounded-full
-                [&::-moz-range-thumb]:bg-navy
+                [&::-moz-range-thumb]:bg-green-alpine
                 [&::-moz-range-thumb]:border-2
                 [&::-moz-range-thumb]:border-white"
               style={{
-                background: `linear-gradient(to right, #1e3a5f ${((cfg.radius_km - 5) / 95) * 100}%, #dce6f0 ${((cfg.radius_km - 5) / 95) * 100}%)`
+                background: `linear-gradient(to right, #2d9e4e ${((cfg.radius_km - 5) / 95) * 100}%, #e0ebe2 ${((cfg.radius_km - 5) / 95) * 100}%)`
               }}
             />
             <div className="flex justify-between mt-1.5">
@@ -258,7 +258,7 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
         <div className="space-y-4">
 
           {/* Jours */}
-          <div className={["bg-surface rounded-card border border-[#dce6f0] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
+          <div className={["bg-surface rounded-card border border-[#e0ebe2] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
             <SectionTitle>Jours disponibles</SectionTitle>
             <div className="flex gap-1.5 mt-3">
               {DAYS.map((day) => {
@@ -271,8 +271,8 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
                     className={[
                       "flex-1 py-2 rounded-lg font-dm text-xs font-medium transition-all",
                       on
-                        ? "bg-navy text-white shadow-sm"
-                        : "bg-background border border-[#dce6f0] text-text-secondary hover:border-navy/40",
+                        ? "bg-green-alpine text-white shadow-sm"
+                        : "bg-background border border-[#e0ebe2] text-text-secondary hover:border-green-alpine/40",
                     ].join(" ")}
                   >
                     {day.short}
@@ -288,7 +288,7 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
           </div>
 
           {/* Créneaux */}
-          <div className={["bg-surface rounded-card border border-[#dce6f0] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
+          <div className={["bg-surface rounded-card border border-[#e0ebe2] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
             <SectionTitle>Créneaux horaires</SectionTitle>
             <div className="grid grid-cols-2 gap-2 mt-3">
               {TIME_SLOTS.map((slot) => {
@@ -300,13 +300,13 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
                     className={[
                       "flex items-center gap-2 p-3 rounded-card border text-left transition-all",
                       on
-                        ? "bg-navy-light border-navy"
-                        : "bg-background border-[#dce6f0] hover:border-navy/40",
+                        ? "bg-green-light border-green-alpine"
+                        : "bg-background border-[#e0ebe2] hover:border-green-alpine/40",
                     ].join(" ")}
                   >
                     <span className="text-base flex-shrink-0">{slot.icon}</span>
                     <div>
-                      <p className={["font-dm text-xs font-medium", on ? "text-navy-dark" : "text-text-primary"].join(" ")}>{slot.label}</p>
+                      <p className={["font-dm text-xs font-medium", on ? "text-green-dark" : "text-text-primary"].join(" ")}>{slot.label}</p>
                       <p className="font-dm text-[10px] text-text-secondary">{slot.sub}</p>
                     </div>
                   </button>
@@ -316,7 +316,7 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
           </div>
 
           {/* Niveau */}
-          <div className={["bg-surface rounded-card border border-[#dce6f0] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
+          <div className={["bg-surface rounded-card border border-[#e0ebe2] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
             <SectionTitle>Niveau recherché</SectionTitle>
             <div className="flex flex-wrap gap-2 mt-3">
               {LEVELS.map((lvl) => {
@@ -328,8 +328,8 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
                     className={[
                       "px-3 py-1.5 rounded-pill border font-dm text-xs font-medium transition-all",
                       on
-                        ? "bg-navy text-white border-navy"
-                        : "bg-background border-[#dce6f0] text-text-secondary hover:border-navy/40",
+                        ? "bg-green-alpine text-white border-green-alpine"
+                        : "bg-background border-[#e0ebe2] text-text-secondary hover:border-green-alpine/40",
                     ].join(" ")}
                   >
                     {lvl.label}
@@ -340,7 +340,7 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
           </div>
 
           {/* Fréquence */}
-          <div className={["bg-surface rounded-card border border-[#dce6f0] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
+          <div className={["bg-surface rounded-card border border-[#e0ebe2] p-4 shadow-card", !cfg.active ? "opacity-50 pointer-events-none" : ""].join(" ")}>
             <SectionTitle>Fréquence des emails</SectionTitle>
             <div className="flex flex-col gap-2 mt-3">
               {FREQUENCIES.map((freq) => {
@@ -352,24 +352,24 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
                     className={[
                       "flex items-center gap-3 p-3 rounded-card border text-left transition-all",
                       on
-                        ? "bg-navy-light border-navy"
-                        : "bg-background border-[#dce6f0] hover:border-navy/40",
+                        ? "bg-green-light border-green-alpine"
+                        : "bg-background border-[#e0ebe2] hover:border-green-alpine/40",
                     ].join(" ")}
                   >
                     {/* Radio dot */}
                     <span className={[
                       "w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center",
-                      on ? "border-navy" : "border-[#ccc]",
+                      on ? "border-green-alpine" : "border-[#ccc]",
                     ].join(" ")}>
-                      {on && <span className="w-2 h-2 rounded-full bg-navy" />}
+                      {on && <span className="w-2 h-2 rounded-full bg-green-alpine" />}
                     </span>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <p className={["font-dm text-sm font-medium", on ? "text-navy-dark" : "text-text-primary"].join(" ")}>
+                        <p className={["font-dm text-sm font-medium", on ? "text-green-dark" : "text-text-primary"].join(" ")}>
                           {freq.label}
                         </p>
                         {freq.badge && (
-                          <span className="font-dm text-[10px] font-semibold bg-navy text-white px-2 py-0.5 rounded-full">
+                          <span className="font-dm text-[10px] font-semibold bg-green-alpine text-white px-2 py-0.5 rounded-full">
                             {freq.badge}
                           </span>
                         )}
@@ -383,18 +383,18 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
           </div>
 
           {/* Résumé + estimation + boutons */}
-          <div className="bg-surface rounded-card border border-[#dce6f0] p-4 shadow-card">
+          <div className="bg-surface rounded-card border border-[#e0ebe2] p-4 shadow-card">
 
             {/* Estimation */}
-            <div className="flex items-center gap-3 mb-4 bg-navy-light rounded-xl p-3 border border-[#c0d4e8]">
+            <div className="flex items-center gap-3 mb-4 bg-green-light rounded-xl p-3 border border-[#c8e8d0]">
               <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center border border-[#d8edd8] flex-shrink-0">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d9e4e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 12 19.79 19.79 0 0 1 1.95 3.39 2 2 0 0 1 3.94 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                 </svg>
               </div>
               <div>
                 <p className="font-dm text-xs text-text-secondary">Estimation alertes / semaine</p>
-                <p className="font-syne font-bold text-xl text-navy leading-tight">
+                <p className="font-syne font-bold text-xl text-green-alpine leading-tight">
                   {cfg.active && cfg.sports.length > 0 ? `~${estimate}` : "0"}
                   <span className="font-dm text-sm font-normal text-text-secondary ml-1">alertes</span>
                 </p>
@@ -405,7 +405,7 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
             <p className="font-dm text-xs font-medium text-text-secondary uppercase tracking-wide mb-2">Critères actifs</p>
             <div className="flex flex-wrap gap-1.5 mb-4">
               {cfg.active && summaryTags.length > 0 ? summaryTags.map((tag, i) => (
-                <span key={i} className="font-dm text-[11px] bg-background border border-[#dce6f0] text-text-secondary rounded-full px-2.5 py-1">
+                <span key={i} className="font-dm text-[11px] bg-background border border-[#e0ebe2] text-text-secondary rounded-full px-2.5 py-1">
                   {tag}
                 </span>
               )) : (
@@ -415,13 +415,13 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
 
             {/* Feedback sauvegarde */}
             {saved && (
-              <div className="flex items-center gap-2 text-navy font-dm text-sm mb-3">
+              <div className="flex items-center gap-2 text-green-alpine font-dm text-sm mb-3">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                 Alertes enregistrées
               </div>
             )}
             {testSent && (
-              <div className="flex items-center gap-2 text-navy font-dm text-sm mb-3">
+              <div className="flex items-center gap-2 text-green-alpine font-dm text-sm mb-3">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                 Email de test envoyé à {testSent}
               </div>
@@ -431,14 +431,14 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
             <button
               onClick={handleSave}
               disabled={isPending || cfg.sports.length === 0}
-              className="w-full bg-navy text-white font-syne font-bold text-sm py-3 rounded-pill mb-2 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-navy-dark transition-colors"
+              className="w-full bg-green-alpine text-white font-syne font-bold text-sm py-3 rounded-pill mb-2 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-green-dark transition-colors"
             >
               {isPending ? "Enregistrement…" : "Enregistrer mes alertes"}
             </button>
             <button
               onClick={handleTest}
               disabled={isPending || !cfg.active}
-              className="w-full bg-transparent border border-[#dce6f0] text-text-secondary font-dm text-sm py-2.5 rounded-pill disabled:opacity-40 disabled:cursor-not-allowed hover:border-navy/40 hover:text-text-primary transition-colors"
+              className="w-full bg-transparent border border-[#e0ebe2] text-text-secondary font-dm text-sm py-2.5 rounded-pill disabled:opacity-40 disabled:cursor-not-allowed hover:border-green-alpine/40 hover:text-text-primary transition-colors"
             >
               M&apos;envoyer un mail de test
             </button>

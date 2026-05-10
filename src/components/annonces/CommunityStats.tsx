@@ -23,10 +23,10 @@ export async function CommunityStats() {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-px bg-[#dce6f0] border-b border-[#dce6f0]">
+    <div className="grid grid-cols-3 gap-px bg-[#e0ebe2] border-b border-[#e0ebe2]">
       {stats.map(({ label, value }) => (
         <div key={label} className="bg-surface px-2 py-3 text-center">
-          <p className="font-syne font-bold text-lg text-navy leading-none">
+          <p className="font-syne font-bold text-lg text-green-alpine leading-none">
             {value}
           </p>
           <p className="font-dm text-[10px] text-text-secondary mt-0.5">{label}</p>

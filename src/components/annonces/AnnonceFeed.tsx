@@ -79,7 +79,7 @@ function EmptyState({ sport, ville, q }: { sport?: string; ville?: string; q?: s
       </p>
       <a
         href="/annonce/creer"
-        className="inline-block mt-2 bg-navy text-white font-dm font-medium text-sm px-5 py-2.5 rounded-card"
+        className="inline-block mt-2 bg-green-alpine text-white font-dm font-medium text-sm px-5 py-2.5 rounded-card"
       >
         Publier une annonce
       </a>

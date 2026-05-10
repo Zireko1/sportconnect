@@ -34,8 +34,8 @@ export default function MotDePasseOubliePage() {
     return (
       <Card>
         <CardBody className="p-6 text-center space-y-4">
-          <div className="w-14 h-14 bg-navy-light rounded-full flex items-center justify-center mx-auto">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="w-14 h-14 bg-green-light rounded-full flex items-center justify-center mx-auto">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d9e4e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
             </svg>
@@ -46,7 +46,7 @@ export default function MotDePasseOubliePage() {
               Vérifie ta boîte mail pour réinitialiser ton mot de passe.
             </p>
           </div>
-          <a href="/connexion" className="block font-dm text-sm text-navy hover:text-navy-dark">
+          <a href="/connexion" className="block font-dm text-sm text-green-alpine hover:text-green-dark">
             Retour à la connexion
           </a>
         </CardBody>

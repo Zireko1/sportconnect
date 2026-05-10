@@ -10,7 +10,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         avatar={
           <Suspense
             fallback={
-              <div className="w-9 h-9 rounded-full bg-navy-light animate-pulse" />
+              <div className="w-9 h-9 rounded-full bg-green-light animate-pulse" />
             }
           >
             <UserAvatar />
