@@ -52,11 +52,33 @@ export default function ConfidentialitePage() {
           ),
         },
         {
+          title: "Sous-traitants",
+          content: (
+            <>
+              <p>Vos données sont traitées par les prestataires techniques suivants :</p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>
+                  <strong>Vercel Inc.</strong> — hébergement du site — États-Unis
+                </li>
+                <li>
+                  <strong>Supabase Inc.</strong> — base de données et authentification — données
+                  hébergées dans l&apos;Union européenne (Paris, France)
+                </li>
+                <li>
+                  <strong>Resend</strong> — envoi des emails (alertes, notifications) — États-Unis
+                </li>
+              </ul>
+            </>
+          ),
+        },
+        {
           title: "Transferts hors UE",
           content: (
             <p>
-              Aucun transfert hors de l&apos;Union européenne, sauf vers Vercel (hébergement aux
-              États-Unis, encadré par les clauses contractuelles types — Standard Contractual Clauses).
+              Les données hébergées par Supabase restent dans l&apos;Union européenne. Les traitements
+              réalisés par Vercel (hébergement) et Resend (envoi d&apos;emails) impliquent un transfert
+              vers les États-Unis, encadré par les clauses contractuelles types de la Commission
+              européenne (Standard Contractual Clauses).
             </p>
           ),
         },
