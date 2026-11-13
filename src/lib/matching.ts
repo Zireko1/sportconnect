@@ -73,12 +73,16 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function getNextFriday17h(): string {
+/**
+ * Lundi suivant à 6h (Paris). Le cron weekly tourne le lundi à 7h UTC
+ * (8h Paris l'hiver, 9h l'été) : l'échéance est donc toujours passée.
+ */
+function getNextMonday6h(): string {
   const { year, month, day, dow } = parisParts(new Date());
-  const daysUntilFriday = (5 - dow + 7) % 7 || 7;
+  const daysUntilMonday = (1 - dow + 7) % 7 || 7;
   // Date.UTC gère le débordement de jour/mois
-  const target = new Date(Date.UTC(year, month - 1, day + daysUntilFriday));
-  return parisWallTime(target.getUTCFullYear(), target.getUTCMonth() + 1, target.getUTCDate(), 17).toISOString();
+  const target = new Date(Date.UTC(year, month - 1, day + daysUntilMonday));
+  return parisWallTime(target.getUTCFullYear(), target.getUTCMonth() + 1, target.getUTCDate(), 6).toISOString();
 }
 
 export async function triggerMatchingForAnnonce(annonceId: string): Promise<void> {
@@ -173,7 +177,7 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
       const scheduledFor =
         config.frequency === "daily"
           ? parisTodayAt(18).toISOString()
-          : getNextFriday17h();
+          : getNextMonday6h();
 
       await supabase.from("alert_queue").upsert(
         { user_id: user.id, annonce_id: annonceId, sent_at: null, scheduled_for: scheduledFor },
