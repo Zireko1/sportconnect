@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/layout/SignOutButton";
+import { EditProfilForm } from "./EditProfilForm";
 import type { Database, Sport, Level } from "@/types/database";
 
 type UserRow = Database["public"]["Tables"]["users"]["Row"];
@@ -113,6 +114,18 @@ export default async function ProfilPage() {
           )}
         </div>
       </div>
+
+      {/* Modifier mon profil */}
+      <EditProfilForm
+        profile={{
+          name: p?.name ?? "",
+          city: p?.city ?? null,
+          latitude: p?.latitude ?? null,
+          longitude: p?.longitude ?? null,
+          sports: p?.sports ?? [],
+          level: p?.level ?? null,
+        }}
+      />
 
       {/* Sports favoris */}
       <div className="bg-surface rounded-card shadow-card p-5">
