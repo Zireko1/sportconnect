@@ -18,13 +18,49 @@ const SLOT_LABELS: Record<string, string> = {
   matin: "Matin (7h–12h)", "apres-midi": "Après-midi (12h–18h)", soiree: "Soirée (18h–22h)", tous: "Toute la journée",
 };
 
+// Toutes les heures/jours sont évalués en heure de Paris (le serveur Vercel est en UTC).
+const TZ = "Europe/Paris";
+
+const parisFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: TZ,
+  year: "numeric", month: "2-digit", day: "2-digit",
+  hour: "2-digit", minute: "2-digit", second: "2-digit",
+  hourCycle: "h23",
+});
+
+/** Composantes date/heure d'un instant, vues depuis Paris. */
+function parisParts(date: Date) {
+  const p: Record<string, number> = {};
+  for (const { type, value } of parisFormatter.formatToParts(date)) {
+    if (type !== "literal") p[type] = Number(value);
+  }
+  const { year, month, day, hour, minute, second } = p;
+  // Jour de la semaine (0 = dimanche) calculé sur la date parisienne
+  const dow = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+  return { year, month, day, hour, minute, second, dow };
+}
+
+/** Instant correspondant à une heure murale donnée à Paris (gère l'heure d'été). */
+function parisWallTime(year: number, month: number, day: number, hour: number): Date {
+  const guess = Date.UTC(year, month - 1, day, hour);
+  const p = parisParts(new Date(guess));
+  const offset = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - guess;
+  return new Date(guess - offset);
+}
+
 function getSlot(dateTime: string): string {
-  const h = new Date(dateTime).getHours();
+  const h = parisParts(new Date(dateTime)).hour;
   return SLOT_RANGES.find(({ min, max }) => h >= min && h < max)?.value ?? "soiree";
 }
 
 function getDow(dateTime: string): number {
-  return new Date(dateTime).getDay();
+  return parisParts(new Date(dateTime)).dow;
+}
+
+/** Aujourd'hui (date parisienne) à l'heure donnée, heure de Paris. */
+function parisTodayAt(hour: number): Date {
+  const { year, month, day } = parisParts(new Date());
+  return parisWallTime(year, month, day, hour);
 }
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -38,11 +74,11 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
 }
 
 function getNextFriday17h(): string {
-  const d = new Date();
-  const daysUntilFriday = (5 - d.getDay() + 7) % 7 || 7;
-  d.setDate(d.getDate() + daysUntilFriday);
-  d.setHours(17, 0, 0, 0);
-  return d.toISOString();
+  const { year, month, day, dow } = parisParts(new Date());
+  const daysUntilFriday = (5 - dow + 7) % 7 || 7;
+  // Date.UTC gère le débordement de jour/mois
+  const target = new Date(Date.UTC(year, month - 1, day + daysUntilFriday));
+  return parisWallTime(target.getUTCFullYear(), target.getUTCMonth() + 1, target.getUTCDate(), 17).toISOString();
 }
 
 export async function triggerMatchingForAnnonce(annonceId: string): Promise<void> {
@@ -101,8 +137,7 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
 
     if (config.frequency === "realtime") {
       // Anti-spam : max 3 alertes realtime par jour
-      const todayStart = new Date();
-      todayStart.setHours(0, 0, 0, 0);
+      const todayStart = parisTodayAt(0);
       const { count } = await supabase
         .from("alert_queue")
         .select("*", { count: "exact", head: true })
@@ -137,7 +172,7 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
       // Mettre en file pour digest daily/weekly
       const scheduledFor =
         config.frequency === "daily"
-          ? (() => { const d = new Date(); d.setHours(18, 0, 0, 0); return d.toISOString(); })()
+          ? parisTodayAt(18).toISOString()
           : getNextFriday17h();
 
       await supabase.from("alert_queue").upsert(

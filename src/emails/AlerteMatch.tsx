@@ -28,11 +28,11 @@ const FREQ_LABEL: Record<string, string> = {
 
 function formatDate(dt: string) {
   return new Date(dt).toLocaleDateString("fr-FR", {
-    weekday: "long", day: "numeric", month: "long", year: "numeric",
+    weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris",
   });
 }
 function formatTime(dt: string) {
-  return new Date(dt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  return new Date(dt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" });
 }
 
 export interface AlerteMatchEmailProps {
