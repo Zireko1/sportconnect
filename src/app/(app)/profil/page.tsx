@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { SignOutButton } from "@/components/layout/SignOutButton";
 import type { Database, Sport, Level } from "@/types/database";
 
 type UserRow = Database["public"]["Tables"]["users"]["Row"];
@@ -214,13 +215,6 @@ export default async function ProfilPage() {
 
 function DeconnexionButton() {
   return (
-    <form action="/auth/signout" method="post">
-      <button
-        type="submit"
-        className="w-full font-dm text-sm text-text-secondary hover:text-red-500 transition-colors py-3 text-center"
-      >
-        Se déconnecter
-      </button>
-    </form>
+    <SignOutButton className="w-full font-dm text-sm font-medium text-red-600 bg-surface border border-red-200 hover:bg-red-50 rounded-card transition-colors py-3 text-center disabled:opacity-60" />
   );
 }

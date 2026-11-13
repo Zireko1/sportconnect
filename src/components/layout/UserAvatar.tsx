@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { UserMenu } from "@/components/layout/UserMenu";
 import type { Database } from "@/types/database";
 
 type UserProfile = Pick<
@@ -40,19 +41,10 @@ export async function UserAvatar() {
     : "?";
 
   return (
-    <Link href="/profil" aria-label="Mon profil">
-      {profile?.avatar_url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={profile.avatar_url}
-          alt={profile.name}
-          className="w-9 h-9 rounded-full object-cover border-2 border-green-light"
-        />
-      ) : (
-        <div className="w-9 h-9 rounded-full bg-green-alpine flex items-center justify-center">
-          <span className="font-syne font-bold text-white text-xs">{initials}</span>
-        </div>
-      )}
-    </Link>
+    <UserMenu
+      name={profile?.name ?? ""}
+      avatarUrl={profile?.avatar_url ?? null}
+      initials={initials}
+    />
   );
 }
