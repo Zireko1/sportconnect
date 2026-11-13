@@ -113,15 +113,20 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
       if ((count ?? 0) >= 3) continue;
 
       // Envoi immédiat
-      await sendAlertEmail({
-        to: user.email,
-        userName: user.name,
-        annonce,
-        matchedCriteria: { sport: true, distanceKm, dayLabel, slotLabel: SLOT_LABELS[slot] ?? slot },
-        otherAnnonces: others ?? [],
-        alertConfig: { sports: config.sports, radius_km: config.radius_km, frequency: config.frequency },
-        appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
-      });
+      try {
+        await sendAlertEmail({
+          to: user.email,
+          userName: user.name,
+          annonce,
+          matchedCriteria: { sport: true, distanceKm, dayLabel, slotLabel: SLOT_LABELS[slot] ?? slot },
+          otherAnnonces: others ?? [],
+          alertConfig: { sports: config.sports, radius_km: config.radius_km, frequency: config.frequency },
+          appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+        });
+      } catch (err) {
+        console.error(`[matching] échec envoi realtime à ${user.id}:`, err);
+        continue;
+      }
 
       // Marquer comme envoyé dans la queue
       await supabase.from("alert_queue").upsert(
@@ -158,7 +163,7 @@ export async function sendAlertEmail(params: SendAlertEmailParams) {
     { soccer_five: "Soccer Five", padel: "Padel", basket: "Basket", velo: "Vélo", trail: "Trail", randonnee: "Randonnée", volley: "Volley", futsal: "Futsal", badminton: "Badminton", autre: params.annonce.sport_custom ?? "Autre sport" }[params.annonce.sport]
     ?? params.annonce.sport;
 
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from: process.env.RESEND_FROM ?? "alertes@sportvoisin.fr",
     to: resolveRecipient(params.to),
     subject: `🔔 ${sportLabel} disponible — ${params.annonce.city}`,
@@ -171,4 +176,7 @@ export async function sendAlertEmail(params: SendAlertEmailParams) {
       appUrl: params.appUrl,
     }),
   });
+
+  // Resend ne lève pas d'exception : il renvoie { error }
+  if (error) throw new Error(`Resend: ${error.message}`);
 }
