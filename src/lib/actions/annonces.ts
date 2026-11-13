@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { waitUntil } from "@vercel/functions";
+import { triggerMatchingForAnnonce } from "@/lib/matching";
 import type { Sport, SportType, Level } from "@/types/database";
 
 export interface CreateAnnonceInput {
@@ -58,11 +60,13 @@ export async function createAnnonce(input: CreateAnnonceInput) {
 
   if (error) throw new Error(error.message);
 
-  // Déclencher le matching en arrière-plan (non-bloquant)
-  const annonceId = data.id;
-  import("@/lib/matching")
-    .then(({ triggerMatchingForAnnonce }) => triggerMatchingForAnnonce(annonceId))
-    .catch((err) => console.error("[matching] erreur:", err));
+  // Déclencher le matching après la réponse, sans être coupé par la fin de
+  // la fonction serverless (équivalent de after() de Next 15 pour Next 14).
+  waitUntil(
+    triggerMatchingForAnnonce(data.id).catch((err) =>
+      console.error("[matching] erreur:", err)
+    )
+  );
 
   redirect(`/annonce/${data.id}`);
 }
