@@ -82,7 +82,24 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
         {/* Fil d'annonces */}
         <Suspense fallback={<FeedSkeleton />}>
-          <AnnonceFeed sport={sport} ville={ville} q={q} />
+          <AnnonceFeed
+            sport={sport}
+            ville={ville}
+            q={q}
+            slot={
+              <section className="bg-surface rounded-card shadow-card overflow-hidden">
+                <div className="px-4 py-2.5 border-b border-[#e0ebe2] flex items-center justify-between">
+                  <h2 className="font-syne font-bold text-sm text-text-primary">Carte</h2>
+                  <a href="/explorer?vue=carte" className="font-dm text-xs text-green-alpine hover:text-green-dark">
+                    Agrandir
+                  </a>
+                </div>
+                <Suspense fallback={<div className="h-[250px] bg-[#e8f5ec] animate-pulse" />}>
+                  <AnnonceMapSection sport={sport} ville={ville} q={q} breakpoint="mobile" heightClass="h-[250px]" />
+                </Suspense>
+              </section>
+            }
+          />
         </Suspense>
       </div>
 
@@ -155,7 +172,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               </a>
             </div>
             <Suspense fallback={<div className="h-[400px] bg-[#e8f5ec] animate-pulse" />}>
-              <AnnonceMapSection sport={sport} ville={ville} q={q} />
+              <AnnonceMapSection sport={sport} ville={ville} q={q} breakpoint="desktop" />
             </Suspense>
           </div>
         </aside>

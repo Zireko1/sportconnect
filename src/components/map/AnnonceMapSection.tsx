@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/viewer";
 import { AnnonceMap, type MapAnnonce } from "./AnnonceMap";
@@ -8,16 +9,19 @@ interface Props {
   ville?: string;
   q?: string;
   className?: string;
+  /** Ne monter la carte que sur ce format (évite deux cartes Leaflet sur l'accueil) */
+  breakpoint?: "mobile" | "desktop";
+  heightClass?: string;
 }
 
 /** Nombre max d'annonces affichées sur la carte */
 const MAP_LIMIT = 300;
 
 /**
- * Charge les annonces à venir qui ont des coordonnées (mêmes filtres que la
- * liste) et les passe à la carte, rendue uniquement côté client.
+ * Annonces à venir qui ont des coordonnées (mêmes filtres que la liste).
+ * Mémoïsée par rendu : l'accueil affiche une carte mobile et une desktop.
  */
-export async function AnnonceMapSection({ sport, ville, q, className }: Props) {
+const fetchMapAnnonces = cache(async (sport?: string, ville?: string, q?: string): Promise<MapAnnonce[]> => {
   const supabase = await createClient();
 
   let query = supabase
@@ -34,9 +38,9 @@ export async function AnnonceMapSection({ sport, ville, q, className }: Props) {
   if (ville) query = query.eq("city", ville);
   if (q) query = query.ilike("title", `%${q}%`);
 
-  const [{ data }, viewer] = await Promise.all([query, getViewer()]);
+  const { data } = await query;
 
-  const annonces: MapAnnonce[] = (data ?? [])
+  return (data ?? [])
     .filter((a): a is typeof a & { latitude: number; longitude: number } =>
       typeof a.latitude === "number" && typeof a.longitude === "number")
     .map((a) => {
@@ -52,10 +56,15 @@ export async function AnnonceMapSection({ sport, ville, q, className }: Props) {
         organizer: (organizer as { name?: string } | null)?.name ?? null,
       };
     });
+});
+
+/** Section serveur : charge les données et rend la carte (côté client uniquement). */
+export async function AnnonceMapSection({ sport, ville, q, className, breakpoint, heightClass }: Props) {
+  const [annonces, viewer] = await Promise.all([fetchMapAnnonces(sport, ville, q), getViewer()]);
 
   const profile = viewer
     ? { city: viewer.city, latitude: viewer.latitude, longitude: viewer.longitude }
     : null;
 
-  return <AnnonceMap annonces={annonces} profile={profile} className={className} />;
+  return <AnnonceMap annonces={annonces} profile={profile} className={className} breakpoint={breakpoint} heightClass={heightClass} />;
 }

@@ -18,6 +18,8 @@ interface NearbyFeedProps {
   limit?: number;
   /** Afficher l'encart alertes s'il y a moins de 3 annonces dans la région */
   showAlertCta?: boolean;
+  /** Contenu inséré entre le CTA alertes et la liste */
+  slot?: React.ReactNode;
 }
 
 /** Rayon considéré comme « la région » de l'utilisateur */
@@ -29,7 +31,7 @@ const MIN_REGION_ANNONCES = 3;
  * (géoloc ou ville du profil), sinon conserve l'ordre chronologique.
  * Les annonces sans coordonnées passent après, dans l'ordre chronologique.
  */
-export function NearbyFeed({ annonces, profile, variant = "default", limit = 20, showAlertCta = false }: NearbyFeedProps) {
+export function NearbyFeed({ annonces, profile, variant = "default", limit = 20, showAlertCta = false, slot }: NearbyFeedProps) {
   const { location } = useUserLocation(profile);
 
   const items = useMemo(() => {
@@ -61,6 +63,7 @@ export function NearbyFeed({ annonces, profile, variant = "default", limit = 20,
     return (
       <>
         {cta && <AlertesCta className="mb-4" />}
+        {slot && <div className="mb-4">{slot}</div>}
         <div className="grid grid-cols-2 gap-4">{cards}</div>
       </>
     );
@@ -68,6 +71,7 @@ export function NearbyFeed({ annonces, profile, variant = "default", limit = 20,
   return (
     <div className="px-4 space-y-3 py-4">
       {cta && <AlertesCta />}
+      {slot}
       {cards}
     </div>
   );

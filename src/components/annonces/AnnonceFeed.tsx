@@ -9,6 +9,8 @@ interface AnnonceFeedProps {
   ville?: string;
   q?: string;
   variant?: "default" | "grid";
+  /** Contenu inséré entre le CTA alertes et la liste (ex. encart carte mobile) */
+  slot?: React.ReactNode;
 }
 
 /** Nombre d'annonces à venir chargées : le tri par proximité se fait côté client sur ce lot */
@@ -16,7 +18,7 @@ const FETCH_LIMIT = 100;
 /** Nombre d'annonces affichées */
 const DISPLAY_LIMIT = 20;
 
-export async function AnnonceFeed({ sport, ville, q, variant = "default" }: AnnonceFeedProps) {
+export async function AnnonceFeed({ sport, ville, q, variant = "default", slot }: AnnonceFeedProps) {
   const supabase = await createClient();
 
   const baseQuery = supabase
@@ -51,12 +53,18 @@ export async function AnnonceFeed({ sport, ville, q, variant = "default" }: Anno
   if (!annonces || annonces.length === 0) {
     if (showAlertCta) {
       return (
-        <div className={variant === "grid" ? "" : "px-4 py-4"}>
+        <div className={variant === "grid" ? "" : "px-4 py-4 space-y-3"}>
           <AlertesCta />
+          {slot}
         </div>
       );
     }
-    return <EmptyState sport={sport} ville={ville} q={q} />;
+    return (
+      <>
+        {slot && <div className="px-4 pt-4">{slot}</div>}
+        <EmptyState sport={sport} ville={ville} q={q} />
+      </>
+    );
   }
 
   const profile = viewer
@@ -70,6 +78,7 @@ export async function AnnonceFeed({ sport, ville, q, variant = "default" }: Anno
       variant={variant}
       limit={DISPLAY_LIMIT}
       showAlertCta={showAlertCta}
+      slot={slot}
     />
   );
 }
