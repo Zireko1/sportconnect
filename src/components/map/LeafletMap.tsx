@@ -10,23 +10,11 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import { SPORT_EMOJI, SPORT_LABEL } from "@/components/ui/Badge";
 import { useUserLocation } from "@/lib/hooks/useUserLocation";
 import type { AnnonceMapProps, MapAnnonce } from "./AnnonceMap";
+import { GREEN, annonceIcon } from "./icons";
 
 const DEFAULT_CENTER: [number, number] = [45.8992, 6.1294]; // Annecy
 const DEFAULT_ZOOM = 11;
-const GREEN = "#3aaa5c";
 const BLUE = "#2563eb";
-
-// Icônes SVG inline : évite le bug des icônes par défaut de Leaflet avec webpack.
-const annonceIcon = L.divIcon({
-  className: "",
-  html: `<svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M15 1C7.3 1 1 7.2 1 14.9 1 25.3 15 39 15 39s14-13.7 14-24.1C29 7.2 22.7 1 15 1z" fill="${GREEN}" stroke="#fff" stroke-width="2"/>
-    <circle cx="15" cy="15" r="5.5" fill="#fff"/>
-  </svg>`,
-  iconSize: [30, 40],
-  iconAnchor: [15, 39],
-  popupAnchor: [0, -34],
-});
 
 const userIcon = L.divIcon({
   className: "",

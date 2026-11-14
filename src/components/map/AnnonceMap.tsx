@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { ProfileLocation } from "@/lib/hooks/useUserLocation";
+import { useBreakpoint } from "@/lib/hooks/useBreakpoint";
 
 export interface MapAnnonce {
   id: string;
@@ -40,17 +40,7 @@ const LeafletMap = dynamic(() => import("./LeafletMap"), {
 });
 
 export function AnnonceMap({ className = "", breakpoint, heightClass = HEIGHT, ...props }: AnnonceMapProps) {
-  // null = pas encore déterminé (rendu serveur / premier rendu)
-  const [matches, setMatches] = useState<boolean | null>(breakpoint ? null : true);
-
-  useEffect(() => {
-    if (!breakpoint) return;
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const update = () => setMatches(breakpoint === "desktop" ? mq.matches : !mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, [breakpoint]);
+  const matches = useBreakpoint(breakpoint);
 
   return (
     <div className={`relative w-full ${heightClass} overflow-hidden isolate ${className}`}>

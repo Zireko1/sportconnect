@@ -6,6 +6,7 @@ import { JoinButton } from "@/components/annonces/JoinButton";
 import { ShareButton } from "@/components/annonces/ShareButton";
 import { ContactSection } from "@/components/annonces/ContactSection";
 import { StarRating } from "@/components/ui/StarRating";
+import { LocationMap } from "@/components/map/LocationMap";
 import { submitAvisAnnonce } from "@/lib/actions/avis";
 import type { Database } from "@/types/database";
 
@@ -202,7 +203,13 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
 
         {/* Carte */}
         <div className="mx-4 mb-4">
-          <MapPlaceholder locationName={ann.location_name} city={ann.city} />
+          <LocationMap
+            locationName={ann.location_name}
+            city={ann.city}
+            lat={ann.latitude}
+            lon={ann.longitude}
+            breakpoint="mobile"
+          />
         </div>
 
         {/* Évaluations */}
@@ -286,7 +293,13 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
             </div>
 
             {/* Carte */}
-            <MapPlaceholder locationName={ann.location_name} city={ann.city} />
+            <LocationMap
+              locationName={ann.location_name}
+              city={ann.city}
+              lat={ann.latitude}
+              lon={ann.longitude}
+              breakpoint="desktop"
+            />
 
             {/* Évaluations */}
             {(avgAnnonceNote !== null || canRateAnnonce) && (
@@ -532,51 +545,6 @@ function OrganizerCard({
           </p>
         </div>
       </Link>
-    </div>
-  );
-}
-
-function MapPlaceholder({ locationName, city }: { locationName: string; city: string }) {
-  return (
-    <div className="bg-surface rounded-card shadow-card overflow-hidden">
-      <div className="px-4 py-3 border-b border-[#e0ebe2] flex items-center justify-between">
-        <div className="min-w-0">
-          <p className="font-syne font-bold text-sm text-text-primary truncate">{locationName}</p>
-          <p className="font-dm text-xs text-text-secondary">{city}</p>
-        </div>
-        <span className="font-dm text-[10px] font-medium bg-green-alpine/10 text-green-dark px-2 py-0.5 rounded-pill ml-2 flex-shrink-0">
-          Carte
-        </span>
-      </div>
-      <div className="relative h-44 bg-[#e8f5ec] overflow-hidden">
-        <svg
-          className="absolute inset-0 w-full h-full"
-          viewBox="0 0 320 176"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          {[28, 56, 84, 112, 140].map((y) => (
-            <line key={`h${y}`} x1="0" y1={y} x2="320" y2={y} stroke="#2d9e4e" strokeWidth="0.5" opacity="0.15" />
-          ))}
-          {[40, 80, 120, 160, 200, 240, 280].map((x) => (
-            <line key={`v${x}`} x1={x} y1="0" x2={x} y2="176" stroke="#2d9e4e" strokeWidth="0.5" opacity="0.15" />
-          ))}
-          <path d="M0 88 C60 75 150 105 320 85" stroke="#2d9e4e" strokeWidth="3" fill="none" opacity="0.2" strokeLinecap="round" />
-          <path d="M0 48 C80 58 200 42 320 52" stroke="#2d9e4e" strokeWidth="1.5" fill="none" opacity="0.15" strokeLinecap="round" />
-          <path d="M150 0 C144 52 158 128 152 176" stroke="#2d9e4e" strokeWidth="2" fill="none" opacity="0.18" strokeLinecap="round" />
-          <ellipse cx="110" cy="85" rx="28" ry="18" fill="#2d9e4e" opacity="0.06" />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-          <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-md">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d9e4e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-          </div>
-          <p className="font-dm text-xs font-medium text-green-dark bg-white/80 px-3 py-1 rounded-pill shadow-sm max-w-[200px] text-center truncate">
-            {locationName}
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
