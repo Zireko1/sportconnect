@@ -1,18 +1,12 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { resend, resolveRecipient } from "@/lib/resend";
 import { AlerteMatchEmail } from "@/emails/AlerteMatch";
-import { haversineKm } from "@/lib/geo";
+import { matchAlert, slotForHour } from "@/lib/alert-match";
 import type { Database } from "@/types/database";
 
 type ConfigRow = Database["public"]["Tables"]["alert_configs"]["Row"] & {
-  users: { id: string; email: string; name: string; latitude: number | null; longitude: number | null } | null;
+  users: { id: string; email: string; name: string; city: string | null; latitude: number | null; longitude: number | null } | null;
 };
-
-const SLOT_RANGES: { value: string; min: number; max: number }[] = [
-  { value: "matin",      min: 7,  max: 12 },
-  { value: "apres-midi", min: 12, max: 18 },
-  { value: "soiree",     min: 18, max: 22 },
-];
 
 const DAY_LABELS = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 const SLOT_LABELS: Record<string, string> = {
@@ -50,8 +44,7 @@ function parisWallTime(year: number, month: number, day: number, hour: number): 
 }
 
 function getSlot(dateTime: string): string {
-  const h = parisParts(new Date(dateTime)).hour;
-  return SLOT_RANGES.find(({ min, max }) => h >= min && h < max)?.value ?? "soiree";
+  return slotForHour(parisParts(new Date(dateTime)).hour);
 }
 
 function getDow(dateTime: string): number {
@@ -93,7 +86,7 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
   // Charger les configs actives dont le sport correspond
   const { data: rawConfigs } = await supabase
     .from("alert_configs")
-    .select("*, users(id, email, name, latitude, longitude)")
+    .select("*, users(id, email, name, city, latitude, longitude)")
     .eq("active", true)
     .contains("sports", [annonce.sport]);
 
@@ -105,6 +98,7 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
     .from("annonces")
     .select("id, sport, title, date_time, city, filled_spots, total_spots")
     .eq("status", "open")
+    .gte("date_time", new Date().toISOString())
     .neq("id", annonceId)
     .order("created_at", { ascending: false })
     .limit(3);
@@ -112,23 +106,11 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
   for (const config of configs) {
     const user = config.users;
     if (!user?.email) continue;
-    if (user.id === annonce.organizer_id) continue;
 
-    // Filtre jour
-    if (!config.days_of_week.includes(dow)) continue;
-
-    // Filtre créneau
-    if (!config.time_slots.includes("tous") && !config.time_slots.includes(slot)) continue;
-
-    // Filtre niveau
-    if (config.level !== "tous" && annonce.level && config.level !== annonce.level) continue;
-
-    // Filtre géo (si coordonnées dispo)
-    let distanceKm: number | null = null;
-    if (user.latitude && user.longitude && annonce.latitude && annonce.longitude) {
-      distanceKm = Math.round(haversineKm(user.latitude, user.longitude, annonce.latitude, annonce.longitude));
-      if (distanceKm > config.radius_km) continue;
-    }
+    // Sport, jour, créneau, niveau, rayon (ou ville si coordonnées manquantes)
+    const match = matchAlert(config, user, annonce, dow, slot);
+    if (!match.ok) continue;
+    const { distanceKm } = match;
 
     if (config.frequency === "realtime") {
       // Anti-spam : max 3 alertes realtime par jour
@@ -137,8 +119,7 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
         .from("alert_queue")
         .select("*", { count: "exact", head: true })
         .eq("user_id", user.id)
-        .gte("created_at", todayStart.toISOString())
-        .not("sent_at", "is", null);
+        .gte("sent_at", todayStart.toISOString());
 
       if ((count ?? 0) >= 3) continue;
 

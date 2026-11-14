@@ -139,6 +139,23 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
         <p className="font-dm text-sm text-text-secondary">
           Reçois un email dès qu&apos;une annonce correspond à tes critères près de chez toi.
         </p>
+
+        {/* Réassurance */}
+        <ul className="mt-4 grid gap-2 sm:grid-cols-3">
+          {[
+            { icon: "🎁", title: "100 % gratuit", text: "Les alertes sont gratuites, sans engagement." },
+            { icon: "🔕", title: "Désabonnement libre", text: "Mets en pause ou désactive tes alertes à tout moment, en un clic ici." },
+            { icon: "📬", title: "Zéro spam", text: "Seulement les annonces qui collent à tes critères — 3 alertes max par jour en temps réel." },
+          ].map(({ icon, title, text }) => (
+            <li key={title} className="flex items-start gap-2.5 bg-green-light/60 border border-green-alpine/20 rounded-card px-3 py-2.5">
+              <span className="text-lg leading-none" aria-hidden>{icon}</span>
+              <span>
+                <span className="block font-dm text-sm font-medium text-green-dark">{title}</span>
+                <span className="block font-dm text-xs text-text-secondary">{text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* ── Desktop 2-col / mobile 1-col ── */}

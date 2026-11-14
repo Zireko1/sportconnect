@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/viewer";
 import { NearbyFeed, type FeedAnnonce } from "./NearbyFeed";
+import { AlertesCta } from "./AlertesCta";
 import type { Sport } from "@/types/database";
 
 interface AnnonceFeedProps {
@@ -43,7 +44,18 @@ export async function AnnonceFeed({ sport, ville, q, variant = "default" }: Anno
     );
   }
 
+  const hasFilters = Boolean(sport || ville || q);
+  // Connecté, sans alerte active et sans filtre : on pousse les alertes
+  const showAlertCta = Boolean(viewer && !viewer.hasActiveAlert && !hasFilters);
+
   if (!annonces || annonces.length === 0) {
+    if (showAlertCta) {
+      return (
+        <div className={variant === "grid" ? "" : "px-4 py-4"}>
+          <AlertesCta />
+        </div>
+      );
+    }
     return <EmptyState sport={sport} ville={ville} q={q} />;
   }
 
@@ -52,7 +64,13 @@ export async function AnnonceFeed({ sport, ville, q, variant = "default" }: Anno
     : null;
 
   return (
-    <NearbyFeed annonces={annonces} profile={profile} variant={variant} limit={DISPLAY_LIMIT} />
+    <NearbyFeed
+      annonces={annonces}
+      profile={profile}
+      variant={variant}
+      limit={DISPLAY_LIMIT}
+      showAlertCta={showAlertCta}
+    />
   );
 }
 

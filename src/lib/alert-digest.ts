@@ -59,8 +59,23 @@ export async function sendDigest(frequency: "daily" | "weekly") {
   for (const [userId, entries] of Array.from(byUser.entries())) {
     const user = entries[0].users;
     const config = configByUser.get(userId)!;
-    const withAnnonce = entries.filter((e) => e.annonces);
-    if (!user?.email || !withAnnonce.length) continue;
+    // On n'envoie que des annonces encore d'actualité (ni passées, ni annulées)
+    const now = Date.now();
+    const withAnnonce = entries.filter(
+      (e) =>
+        e.annonces &&
+        ["open", "full"].includes(e.annonces.status) &&
+        new Date(e.annonces.date_time).getTime() > now
+    );
+    if (!user?.email) continue;
+    if (!withAnnonce.length) {
+      // Rien de pertinent : on vide la file pour ne pas la retraiter à chaque cron
+      await supabase
+        .from("alert_queue")
+        .update({ sent_at: new Date().toISOString() })
+        .in("id", entries.map((e) => e.id));
+      continue;
+    }
 
     const [main, ...rest] = withAnnonce;
     try {

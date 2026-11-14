@@ -297,7 +297,7 @@ export function AlerteMatchEmail({
               {" · "}📧 {FREQ_LABEL[alertConfig.frequency] ?? alertConfig.frequency}
             </Text>
             <Link href={alertesUrl} style={{ fontSize: 12, color: GREEN, fontWeight: 600, textDecoration: "underline" }}>
-              Modifier mes alertes
+              Modifier ou désactiver mes alertes
             </Link>
             <Text style={{ margin: "14px 0 0", fontSize: 11, color: "#aaa" }}>
               SportVoisin · Autour du Léman et des Alpes · Tu reçois cet email car tu as activé les alertes match.
