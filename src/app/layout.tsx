@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { SITE_URL } from "@/lib/seo-data";
 import { Syne, DM_Sans, Plus_Jakarta_Sans, Dancing_Script } from "next/font/google";
 import "./globals.css";
 
@@ -31,7 +32,7 @@ const dancingScript = Dancing_Script({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sportvoisin.fr"),
+  metadataBase: new URL(SITE_URL),
   title: "SportVoisin — Trouve ton match autour du Léman et des Alpes",
   description:
     "Publie une annonce, trouve des joueurs ou des compagnons de sortie. Soccer Five, Padel, Trail, Vélo et plus — autour du Léman et des Alpes : Annecy, Genève, Lausanne, Chambéry, Thonon.",

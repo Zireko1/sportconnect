@@ -1,7 +1,7 @@
 import { haversineKm } from "./geo";
 import type { Sport } from "@/types/database";
 
-export const SITE_URL = "https://sportvoisin.fr";
+export const SITE_URL = "https://www.sportvoisin.fr";
 
 export interface SeoSport {
   slug: string;
