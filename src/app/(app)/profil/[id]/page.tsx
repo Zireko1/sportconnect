@@ -5,7 +5,8 @@ import { StarRating } from "@/components/ui/StarRating";
 import { submitAvisJoueur } from "@/lib/actions/avis";
 import type { Database, Sport, Level } from "@/types/database";
 
-type UserRow = Database["public"]["Tables"]["users"]["Row"];
+/** Profil public d'un autre joueur (vue public_profiles : ni email ni coordonnées) */
+type UserRow = Omit<Database["public"]["Views"]["public_profiles"]["Row"], "first_name"> & { name: string };
 
 const SPORT_LABELS: Record<Sport, string> = {
   soccer_five: "Football 5",
@@ -35,7 +36,11 @@ export default async function ProfilJoueurPage({ params }: PageProps) {
   const supabase = await createClient();
 
   const [{ data: playerData }, { data: { user } }] = await Promise.all([
-    supabase.from("users").select("*").eq("id", playerId).single(),
+    supabase
+      .from("public_profiles")
+      .select("id, name:first_name, avatar_url, sports, level, city")
+      .eq("id", playerId)
+      .single(),
     supabase.auth.getUser(),
   ]);
 

@@ -61,7 +61,7 @@ async function getCityData(sport: SeoSport, city: SeoCity) {
   const [annoncesRes, sportifsRes] = await Promise.all([
     supabase
       .from("annonces")
-      .select("*, users(name, avatar_url)")
+      .select("*, users:public_profiles(name:first_name, avatar_url)")
       .or(sportFilter(sport))
       .in("status", ["open", "full"])
       .gte("date_time", new Date().toISOString())
@@ -70,17 +70,19 @@ async function getCityData(sport: SeoSport, city: SeoCity) {
       .limit(6),
     // Les profils ne peuvent cocher que les sports en base
     sport.dbSports.length
-      ? supabase
-          .from("users")
-          .select("id", { count: "exact", head: true })
-          .overlaps("sports", sport.dbSports)
-          .or(cityFilter(city))
-      : Promise.resolve({ count: 0 }),
+      ? supabase.rpc("count_profiles_near", {
+          p_lat: city.lat,
+          p_lon: city.lon,
+          p_radius_km: CITY_RADIUS_KM,
+          p_city: city.name,
+          p_sports: sport.dbSports,
+        })
+      : Promise.resolve({ data: 0 }),
   ]);
 
   return {
     annonces: (annoncesRes.data ?? []) as FeedAnnonce[],
-    sportifs: sportifsRes.count ?? 0,
+    sportifs: typeof sportifsRes.data === "number" ? sportifsRes.data : 0,
   };
 }
 

@@ -5,7 +5,7 @@ export async function CommunityStats() {
 
   const [{ count: usersCount }, { count: annoncesCount }, { count: matchesCount }] =
     await Promise.all([
-      supabase.from("users").select("*", { count: "exact", head: true }),
+      supabase.from("public_profiles").select("id", { count: "exact", head: true }),
       supabase
         .from("annonces")
         .select("*", { count: "exact", head: true })

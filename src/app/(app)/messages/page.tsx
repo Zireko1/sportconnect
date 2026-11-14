@@ -45,7 +45,7 @@ export default async function MessagesPage() {
       ? supabase.from("annonces").select("id, title, organizer_id").in("id", annonceIds)
       : Promise.resolve({ data: [] }),
     userIds.length
-      ? supabase.from("users").select("id, name, avatar_url").in("id", userIds)
+      ? supabase.from("public_profiles").select("id, name:first_name, avatar_url").in("id", userIds)
       : Promise.resolve({ data: [] }),
   ]);
 

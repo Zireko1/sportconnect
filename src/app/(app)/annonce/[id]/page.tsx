@@ -30,7 +30,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
   const supabase = await createClient();
 
   const [{ data: annonce, error }, { data: { user } }] = await Promise.all([
-    supabase.from("annonces").select("*, users(name, avatar_url)").eq("id", id).single(),
+    supabase.from("annonces").select("*, users:public_profiles(name:first_name, avatar_url)").eq("id", id).single(),
     supabase.auth.getUser(),
   ]);
 
@@ -52,7 +52,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
     : Promise.resolve({ data: null });
 
   const fetchChatPartner = user && isOrganizer && withUser
-    ? supabase.from("users").select("name").eq("id", withUser).single()
+    ? supabase.from("public_profiles").select("name:first_name").eq("id", withUser).single()
     : Promise.resolve({ data: null });
 
   const isPast = new Date(ann.date_time) < new Date();

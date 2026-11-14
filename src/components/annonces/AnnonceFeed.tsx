@@ -21,7 +21,7 @@ export async function AnnonceFeed({ sport, ville, q, variant = "default" }: Anno
 
   const baseQuery = supabase
     .from("annonces")
-    .select("*, users(name, avatar_url)")
+    .select("*, users:public_profiles(name:first_name, avatar_url)")
     .in("status", ["open", "full"])
     .gte("date_time", new Date().toISOString())
     .order("date_time", { ascending: true })

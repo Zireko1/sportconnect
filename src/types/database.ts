@@ -138,6 +138,12 @@ export type Database = {
             columns: ["organizer_id"];
             referencedRelation: "users";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "annonces_organizer_id_fkey";
+            columns: ["organizer_id"];
+            referencedRelation: "public_profiles";
+            referencedColumns: ["id"];
           }
         ];
       };
@@ -239,7 +245,20 @@ export type Database = {
           scheduled_for?: string;
           created_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "alert_queue_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alert_queue_annonce_id_fkey";
+            columns: ["annonce_id"];
+            referencedRelation: "annonces";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       messages: {
         Row: {
@@ -342,8 +361,38 @@ export type Database = {
         Relationships: [];
       };
     };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Views: {
+      /** Profils publics (ni email ni coordonnées) — cf. migration public_profiles */
+      public_profiles: {
+        Row: {
+          id: string;
+          first_name: string;
+          avatar_url: string | null;
+          sports: Sport[];
+          level: Level | null;
+          city: string | null;
+        };
+        Relationships: [];
+      };
+    };
+    Functions: {
+      nearby_profiles: {
+        Args: { p_lat: number; p_lon: number; p_radius_km?: number; p_limit?: number };
+        Returns: {
+          id: string;
+          first_name: string;
+          avatar_url: string | null;
+          sports: Sport[];
+          level: Level | null;
+          city: string | null;
+          distance_km: number;
+        }[];
+      };
+      count_profiles_near: {
+        Args: { p_lat: number; p_lon: number; p_radius_km: number; p_city: string | null; p_sports: Sport[] };
+        Returns: number;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
