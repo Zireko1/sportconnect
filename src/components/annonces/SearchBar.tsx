@@ -1,11 +1,12 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 
 export function SearchBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [, startTransition] = useTransition();
 
@@ -17,7 +18,7 @@ export function SearchBar() {
       if (val) params.set("q", val);
       else params.delete("q");
       params.delete("page");
-      router.push(`/?${params.toString()}`, { scroll: false });
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     });
   }
 

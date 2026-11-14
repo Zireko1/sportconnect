@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import { SPORT_EMOJI, SPORT_LABEL } from "@/components/ui/Badge";
 import { CityAutocomplete } from "@/components/ui/CityAutocomplete";
@@ -14,6 +14,7 @@ interface AnnonceFiltersProps {
 export function AnnonceFilters({ variant = "default" }: AnnonceFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const activeSport = searchParams.get("sport") ?? "";
   const activeCity = searchParams.get("ville") ?? "";
 
@@ -26,9 +27,9 @@ export function AnnonceFilters({ variant = "default" }: AnnonceFiltersProps) {
         params.delete(key);
       }
       params.delete("page");
-      router.push(`/?${params.toString()}`, { scroll: false });
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
-    [router, searchParams]
+    [router, searchParams, pathname]
   );
 
   if (variant === "sidebar") {
