@@ -1,10 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
-import { AnnonceCard } from "./AnnonceCard";
-import type { Database, Sport } from "@/types/database";
-
-type AnnonceRow = Database["public"]["Tables"]["annonces"]["Row"] & {
-  users?: { name: string; avatar_url: string | null } | null;
-};
+import { getViewer } from "@/lib/viewer";
+import { NearbyFeed, type FeedAnnonce } from "./NearbyFeed";
+import type { Sport } from "@/types/database";
 
 interface AnnonceFeedProps {
   sport?: string;
@@ -12,6 +9,11 @@ interface AnnonceFeedProps {
   q?: string;
   variant?: "default" | "grid";
 }
+
+/** Nombre d'annonces à venir chargées : le tri par proximité se fait côté client sur ce lot */
+const FETCH_LIMIT = 100;
+/** Nombre d'annonces affichées */
+const DISPLAY_LIMIT = 20;
 
 export async function AnnonceFeed({ sport, ville, q, variant = "default" }: AnnonceFeedProps) {
   const supabase = await createClient();
@@ -22,14 +24,14 @@ export async function AnnonceFeed({ sport, ville, q, variant = "default" }: Anno
     .in("status", ["open", "full"])
     .gte("date_time", new Date().toISOString())
     .order("date_time", { ascending: true })
-    .limit(20);
+    .limit(FETCH_LIMIT);
 
   const sportFiltered = sport ? baseQuery.eq("sport", sport as Sport) : baseQuery;
   const villeFiltered = ville ? sportFiltered.eq("city", ville) : sportFiltered;
   const finalQuery = q ? villeFiltered.ilike("title", `%${q}%`) : villeFiltered;
 
-  const { data, error } = await finalQuery;
-  const annonces = data as AnnonceRow[] | null;
+  const [{ data, error }, viewer] = await Promise.all([finalQuery, getViewer()]);
+  const annonces = data as FeedAnnonce[] | null;
 
   if (error) {
     return (
@@ -45,22 +47,12 @@ export async function AnnonceFeed({ sport, ville, q, variant = "default" }: Anno
     return <EmptyState sport={sport} ville={ville} q={q} />;
   }
 
-  if (variant === "grid") {
-    return (
-      <div className="grid grid-cols-2 gap-4">
-        {annonces.map((annonce) => (
-          <AnnonceCard key={annonce.id} annonce={annonce} />
-        ))}
-      </div>
-    );
-  }
+  const profile = viewer
+    ? { city: viewer.city, latitude: viewer.latitude, longitude: viewer.longitude }
+    : null;
 
   return (
-    <div className="px-4 space-y-3 py-4">
-      {annonces.map((annonce) => (
-        <AnnonceCard key={annonce.id} annonce={annonce} />
-      ))}
-    </div>
+    <NearbyFeed annonces={annonces} profile={profile} variant={variant} limit={DISPLAY_LIMIT} />
   );
 }
 

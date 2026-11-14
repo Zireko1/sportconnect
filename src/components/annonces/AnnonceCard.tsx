@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardBody } from "@/components/ui/Card";
 import { SportBadge, LevelBadge, StatusBadge } from "@/components/ui/Badge";
+import { formatDistance } from "@/lib/geo";
 import type { Database } from "@/types/database";
 
 type Annonce = Database["public"]["Tables"]["annonces"]["Row"] & {
@@ -23,7 +24,7 @@ function formatTime(dateStr: string) {
   });
 }
 
-export function AnnonceCard({ annonce }: { annonce: Annonce }) {
+export function AnnonceCard({ annonce, distanceKm }: { annonce: Annonce; distanceKm?: number | null }) {
   const spotsLeft = annonce.total_spots - annonce.filled_spots;
   const isOutdoor = annonce.sport_type === "outdoor";
 
@@ -54,6 +55,11 @@ export function AnnonceCard({ annonce }: { annonce: Annonce }) {
             {annonce.location_name}
             <span className="text-text-secondary/50">·</span>
             {annonce.city}
+            {typeof distanceKm === "number" && (
+              <span className="text-green-alpine font-medium whitespace-nowrap">
+                · {formatDistance(distanceKm)}
+              </span>
+            )}
           </span>
 
           {/* Stats outdoor */}

@@ -4,6 +4,8 @@ import { AnnonceFeed } from "@/components/annonces/AnnonceFeed";
 import { CommunityStats } from "@/components/annonces/CommunityStats";
 import { SearchBar } from "@/components/annonces/SearchBar";
 import { UserAvatar } from "@/components/layout/UserAvatar";
+import { LocationBar } from "@/components/annonces/LocationBar";
+import { getViewer } from "@/lib/viewer";
 
 interface HomePageProps {
   searchParams: Promise<{ sport?: string; ville?: string; q?: string }>;
@@ -12,6 +14,10 @@ interface HomePageProps {
 export default async function HomePage({ searchParams }: HomePageProps) {
   const { sport, ville, q } = await searchParams;
   const hasFilters = sport || ville || q;
+  const viewer = await getViewer();
+  const profileLocation = viewer
+    ? { city: viewer.city, latitude: viewer.latitude, longitude: viewer.longitude }
+    : null;
 
   return (
     <>
@@ -69,6 +75,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             </a>
           )}
         </div>
+        <LocationBar profile={profileLocation} className="px-4 pt-1" />
 
         {/* Fil d'annonces */}
         <Suspense fallback={<FeedSkeleton />}>
@@ -114,6 +121,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               </a>
             )}
           </div>
+          <LocationBar profile={profileLocation} className="-mt-2 mb-4" />
           <Suspense fallback={<FeedSkeletonGrid />}>
             <AnnonceFeed sport={sport} ville={ville} q={q} variant="grid" />
           </Suspense>

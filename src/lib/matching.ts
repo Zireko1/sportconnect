@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { resend, resolveRecipient } from "@/lib/resend";
 import { AlerteMatchEmail } from "@/emails/AlerteMatch";
+import { haversineKm } from "@/lib/geo";
 import type { Database } from "@/types/database";
 
 type ConfigRow = Database["public"]["Tables"]["alert_configs"]["Row"] & {
@@ -61,16 +62,6 @@ function getDow(dateTime: string): number {
 function parisTodayAt(hour: number): Date {
   const { year, month, day } = parisParts(new Date());
   return parisWallTime(year, month, day, hour);
-}
-
-function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 /**
