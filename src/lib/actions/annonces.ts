@@ -24,6 +24,8 @@ export interface CreateAnnonceInput {
   distance_km?: number;
   elevation_m?: number;
   pace?: string;
+  /** Sportif invité depuis /sportifs : reçoit un message avec l'annonce */
+  invite_user_id?: string;
 }
 
 export async function createAnnonce(input: CreateAnnonceInput) {
@@ -68,5 +70,50 @@ export async function createAnnonce(input: CreateAnnonceInput) {
     )
   );
 
+  if (input.invite_user_id && input.invite_user_id !== user.id) {
+    await sendInvitation(supabase, {
+      annonceId: data.id,
+      senderId: user.id,
+      receiverId: input.invite_user_id,
+      title: input.title.trim(),
+      dateTime: input.date_time,
+      city: input.city,
+    });
+  }
+
   redirect(`/annonce/${data.id}`);
+}
+
+/** Message d'invitation dans la messagerie + notification email (best effort). */
+async function sendInvitation(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  p: { annonceId: string; senderId: string; receiverId: string; title: string; dateTime: string; city: string }
+) {
+  const date = new Date(p.dateTime).toLocaleString("fr-FR", {
+    weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris",
+  });
+  const { data: msg, error } = await supabase
+    .from("messages")
+    .insert({
+      annonce_id: p.annonceId,
+      sender_id: p.senderId,
+      receiver_id: p.receiverId,
+      content: `👋 Je te propose un match : « ${p.title} », ${date} à ${p.city}. Ça te dit ? Rejoins l'annonce si tu es partant !`,
+    })
+    .select("id")
+    .single();
+
+  if (error || !msg) {
+    console.error("[invitation] échec envoi message:", error?.message);
+    return;
+  }
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  waitUntil(
+    fetch(`${appUrl}/api/messages/notify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messageId: msg.id, annonceId: p.annonceId, senderId: p.senderId, receiverId: p.receiverId }),
+    }).catch((err) => console.error("[invitation] notif email:", err))
+  );
 }

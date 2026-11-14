@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea, Select } from "@/components/ui/Input";
 import { CityAutocomplete } from "@/components/ui/CityAutocomplete";
@@ -76,6 +76,26 @@ export default function CreerAnnoncePage() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [isPending, startTransition] = useTransition();
   const [showAutre, setShowAutre] = useState(false);
+  // Invitation depuis /sportifs (« Proposer un match »)
+  const [invite, setInvite] = useState<{ id: string; name: string } | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const avec = params.get("avec");
+    const avecNom = params.get("avecNom")?.slice(0, 40) ?? "";
+    const s = params.get("sport");
+    if (avec && /^[0-9a-f-]{36}$/i.test(avec)) setInvite({ id: avec, name: avecNom || "ce sportif" });
+    if (s && s in SPORT_TYPE) {
+      const sp = s as Exclude<Sport, "autre">;
+      const title = avec && avecNom
+        ? `${SPORT_LABEL[sp]} avec ${avecNom} ?`
+        : SPORT_TYPE[sp] === "collectif"
+          ? `${SPORT_LABEL[sp]} — il manque des joueurs`
+          : `Sortie ${SPORT_LABEL[sp]} — cherche compagnons`;
+      setForm((f) => ({ ...f, sport: sp, title }));
+      setStep(2);
+    }
+  }, []);
 
   const sport = form.sport as Sport | "";
   const sportType = sport === "autre"
@@ -135,6 +155,7 @@ export default function CreerAnnoncePage() {
         distance_km: form.distance_km ? parseFloat(form.distance_km) : undefined,
         elevation_m: form.elevation_m ? parseInt(form.elevation_m) : undefined,
         pace: form.pace || undefined,
+        invite_user_id: invite?.id,
       });
     });
   }
@@ -177,6 +198,22 @@ export default function CreerAnnoncePage() {
           </div>
         </div>
       </header>
+
+      {invite && (
+        <div className="mx-4 mt-4 bg-green-light border border-green-alpine/30 rounded-card px-4 py-3 flex items-start gap-2">
+          <span aria-hidden>🤝</span>
+          <p className="font-dm text-sm text-green-dark flex-1">
+            <strong>{invite.name}</strong> recevra un message avec ton annonce dès sa publication.
+          </p>
+          <button
+            type="button"
+            onClick={() => setInvite(null)}
+            className="font-dm text-xs text-text-secondary hover:text-text-primary"
+          >
+            Retirer
+          </button>
+        </div>
+      )}
 
       {/* Étape 1 — Choix du sport */}
       {step === 1 && (

@@ -56,6 +56,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <CommunityStats />
         </Suspense>
 
+        <SportifsTeaser className="mx-4 mt-3" />
+
         {/* Filtres sport + ville */}
         <Suspense>
           <AnnonceFilters />
@@ -141,6 +143,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             </Suspense>
           </div>
 
+          <SportifsTeaser />
+
           {/* Carte placeholder */}
           <div className="bg-surface rounded-card shadow-card overflow-hidden">
             <div className="px-4 py-3 border-b border-[#e0ebe2] flex items-center justify-between">
@@ -196,6 +200,22 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </aside>
       </div>
     </>
+  );
+}
+
+function SportifsTeaser({ className = "" }: { className?: string }) {
+  return (
+    <a
+      href="/sportifs"
+      className={`flex items-center gap-3 bg-surface rounded-card shadow-card px-4 py-3 hover:bg-green-light transition-colors ${className}`}
+    >
+      <span className="text-2xl" aria-hidden>👥</span>
+      <span className="flex-1">
+        <span className="block font-syne font-bold text-sm text-text-primary">Sportifs autour de moi</span>
+        <span className="block font-dm text-xs text-text-secondary">Trouve des partenaires près de chez toi</span>
+      </span>
+      <span className="text-green-alpine" aria-hidden>→</span>
+    </a>
   );
 }
 
