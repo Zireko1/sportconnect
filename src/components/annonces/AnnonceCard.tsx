@@ -50,17 +50,23 @@ export function AnnonceCard({ annonce, distanceKm }: { annonce: Annonce; distanc
               {formatDate(annonce.date_time)} · {formatTime(annonce.date_time)}
             </span>
           </div>
-          <span className="flex items-center gap-1.5 font-dm text-sm text-text-secondary">
-            <PinIcon />
-            {annonce.location_name}
-            <span className="text-text-secondary/50">·</span>
-            {annonce.city}
+          <div className="font-dm text-sm text-text-secondary">
+            {/* Un seul bloc de texte : il revient à la ligne naturellement */}
+            <span className="flex items-start gap-1.5">
+              <span className="mt-[3px] shrink-0"><PinIcon /></span>
+              <span>
+                {annonce.location_name}
+                <span className="text-text-secondary/50"> · </span>
+                {annonce.city}
+              </span>
+            </span>
+            {/* Distance sur sa propre ligne, alignée sous le texte (icône 14px + gap) */}
             {typeof distanceKm === "number" && (
-              <span className="text-green-alpine font-medium whitespace-nowrap">
-                · {formatDistance(distanceKm)}
+              <span className="block pl-5 mt-0.5 text-green-alpine font-medium">
+                {formatDistance(distanceKm)}
               </span>
             )}
-          </span>
+          </div>
 
           {/* Stats outdoor */}
           {isOutdoor && (
