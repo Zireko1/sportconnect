@@ -46,7 +46,7 @@ SET
   city   = 'Annecy'
 WHERE id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
 
--- 4. Insérer 5 annonces réalistes — Sillon alpin
+-- 4. Insérer 5 annonces réalistes — autour du Léman et des Alpes
 INSERT INTO public.annonces
   (id, organizer_id,
    sport, sport_type,

@@ -300,7 +300,7 @@ export function AlerteMatchEmail({
               Modifier mes alertes
             </Link>
             <Text style={{ margin: "14px 0 0", fontSize: 11, color: "#aaa" }}>
-              SportVoisin · Sillon alpin · Tu reçois cet email car tu as activé les alertes match.
+              SportVoisin · Autour du Léman et des Alpes · Tu reçois cet email car tu as activé les alertes match.
             </Text>
           </Section>
 

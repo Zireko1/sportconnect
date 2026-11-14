@@ -32,7 +32,7 @@ export function Footer() {
           ))}
         </nav>
         <p className="font-dm text-xs text-text-secondary text-center mt-3">
-          © {new Date().getFullYear()} SportVoisin · Sillon alpin
+          © {new Date().getFullYear()} SportVoisin · Autour du Léman et des Alpes
         </p>
       </div>
     </footer>

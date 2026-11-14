@@ -21,7 +21,7 @@ export default function AProposPage() {
           content: (
             <p>
               L&apos;application permet de publier ou rejoindre des activités sportives (trail, padel,
-              foot, vélo, rando…) dans le Sillon alpin et l&apos;Arc lémanique.
+              foot, vélo, rando…) autour du Léman et des Alpes.
             </p>
           ),
         },

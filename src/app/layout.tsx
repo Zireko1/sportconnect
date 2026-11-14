@@ -31,9 +31,9 @@ const dancingScript = Dancing_Script({
 });
 
 export const metadata: Metadata = {
-  title: "SportVoisin — Trouve ton match dans le Sillon alpin",
+  title: "SportVoisin — Trouve ton match autour du Léman et des Alpes",
   description:
-    "Publie une annonce, trouve des joueurs ou des compagnons de sortie. Soccer Five, Padel, Trail, Vélo et plus — Annecy, Chambéry, Aix-les-Bains.",
+    "Publie une annonce, trouve des joueurs ou des compagnons de sortie. Soccer Five, Padel, Trail, Vélo et plus — autour du Léman et des Alpes : Annecy, Genève, Lausanne, Chambéry, Thonon.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

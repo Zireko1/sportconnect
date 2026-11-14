@@ -116,7 +116,7 @@ export default function InscriptionPage() {
           </div>
           <p className="font-dm text-text-secondary text-sm">
             {step === 1
-              ? "Rejoins la communauté du Sillon alpin"
+              ? "Rejoins la communauté sportive autour du Léman et des Alpes"
               : "Sélectionne tes sports pour personnaliser tes alertes"}
           </p>
         </div>

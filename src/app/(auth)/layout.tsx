@@ -9,7 +9,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="w-full max-w-sm">{children}</div>
 
       <p className="mt-8 font-dm text-xs text-text-secondary text-center">
-        Sillon alpin — Annecy · Chambéry · Aix-les-Bains
+        Autour du Léman et des Alpes — Annecy · Genève · Lausanne · Chambéry
       </p>
     </div>
   );
