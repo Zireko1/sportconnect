@@ -3,6 +3,7 @@ import { ContactForm } from "./ContactForm";
 
 const FOOTER_LINKS = [
   { href: "/a-propos", label: "À propos" },
+  { href: "/blog", label: "Blog" },
   { href: "/mentions-legales", label: "Mentions légales" },
   { href: "/cgu", label: "CGU" },
   { href: "/confidentialite", label: "Confidentialité" },
