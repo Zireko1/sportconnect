@@ -196,8 +196,12 @@ create index alert_queue_scheduled_idx on public.alert_queue(scheduled_for) wher
 -- ---------- users ----------
 alter table public.users enable row level security;
 
-create policy "users: lecture publique"
-  on public.users for select using (true);
+-- Chacun ne lit que sa propre ligne. Les profils des autres passent par la
+-- vue public_profiles et les fonctions nearby_profiles / count_profiles_near
+-- (cf. supabase/migrations/20261114120000_public_profiles.sql et
+-- 20261114130000_restrict_users_select.sql).
+create policy "users: lecture de son propre profil"
+  on public.users for select to authenticated using (auth.uid() = id);
 
 create policy "users: insert via trigger uniquement"
   on public.users for insert with check (auth.uid() = id);
