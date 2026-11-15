@@ -80,7 +80,9 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
   // Realtime subscription
   useEffect(() => {
     const channel = supabase
-      .channel(`chat-${annonceId}-${[currentUserId, chatPartnerId].sort().join("-")}`)
+      // Nom unique : la page peut monter deux ChatPanel (mobile + desktop) et le
+      // client Supabase renverrait sinon le canal déjà souscrit.
+      .channel(`chat-${annonceId}-${[currentUserId, chatPartnerId].sort().join("-")}-${Math.random().toString(36).slice(2, 10)}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "messages" },
