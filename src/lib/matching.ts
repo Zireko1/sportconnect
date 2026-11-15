@@ -145,10 +145,14 @@ export async function triggerMatchingForAnnonce(annonceId: string): Promise<void
         { onConflict: "user_id,annonce_id" }
       );
     } else {
-      // Mettre en file pour digest daily/weekly
+      // Mettre en file pour digest daily/weekly.
+      // Daily : échéance immédiate → envoyé au prochain passage du cron quotidien
+      // (7h UTC). Auparavant planifié à 18h Paris alors que le cron passe le matin :
+      // l'email partait le lendemain, et les annonces du jour même étaient
+      // filtrées comme passées, donc jamais envoyées.
       const scheduledFor =
         config.frequency === "daily"
-          ? parisTodayAt(18).toISOString()
+          ? new Date().toISOString()
           : getNextMonday6h();
 
       await supabase.from("alert_queue").upsert(

@@ -39,7 +39,7 @@ export interface MatchAnnonce {
 
 export type MatchResult =
   | { ok: true; distanceKm: number | null }
-  | { ok: false; reason: "organizer" | "sport" | "day" | "slot" | "level" | "distance" | "city" };
+  | { ok: false; reason: "organizer" | "sport" | "day" | "slot" | "level" | "distance" | "city" | "no_location" };
 
 function sameCity(a: string, b: string) {
   const n = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[-'’\s]+/g, " ").trim();
@@ -78,6 +78,8 @@ export function matchAlert(
     return sameCity(user.city, annonce.city) ? { ok: true, distanceKm: null } : { ok: false, reason: "city" };
   }
 
-  // Utilisateur sans localisation : on ne peut pas filtrer par distance.
-  return { ok: true, distanceKm: null };
+  // Utilisateur sans localisation : impossible de respecter le rayon choisi.
+  // Plutôt que d'alerter pour toutes les annonces de France, on n'envoie rien
+  // (la page /mes-alertes invite à renseigner sa ville).
+  return { ok: false, reason: "no_location" };
 }
