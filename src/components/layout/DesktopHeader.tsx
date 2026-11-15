@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
+import { useUnreadMessages } from "@/lib/hooks/useUnreadMessages";
 
 const NAV_LINKS = [
   { href: "/", label: "Accueil", exact: true },
@@ -15,6 +16,7 @@ const NAV_LINKS = [
 
 export function DesktopHeader({ avatar }: { avatar: React.ReactNode }) {
   const pathname = usePathname();
+  const unread = useUnreadMessages();
 
   return (
     <header className="hidden lg:flex items-center justify-between px-8 h-16 bg-surface border-b border-[#e0ebe2] sticky top-0 z-40">
@@ -30,13 +32,21 @@ export function DesktopHeader({ avatar }: { avatar: React.ReactNode }) {
               key={href}
               href={href}
               className={[
-                "font-dm text-sm transition-colors",
+                "relative font-dm text-sm transition-colors",
                 active
                   ? "text-green-alpine font-medium"
                   : "text-text-secondary hover:text-text-primary",
               ].join(" ")}
             >
               {label}
+              {href === "/messages" && unread > 0 && (
+                <span
+                  aria-label={`${unread} message${unread > 1 ? "s" : ""} non lu${unread > 1 ? "s" : ""}`}
+                  className="absolute -top-2 -right-4 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold leading-[18px] text-center"
+                >
+                  {unread > 9 ? "9+" : unread}
+                </span>
+              )}
             </Link>
           );
         })}

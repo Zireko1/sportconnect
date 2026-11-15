@@ -25,6 +25,7 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const supabase = createClient();
@@ -37,9 +38,9 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
   // Load message history
   useEffect(() => {
     async function load() {
-      const { data } = await supabase
+      const { data, error: loadError } = await supabase
         .from("messages")
-        .select("id, content, sender_id, receiver_id, created_at, read")
+        .select("id, annonce_id, content, sender_id, receiver_id, created_at, read")
         .eq("annonce_id", annonceId)
         .or(
           `and(sender_id.eq.${currentUserId},receiver_id.eq.${chatPartnerId}),` +
@@ -47,6 +48,10 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
         )
         .order("created_at");
 
+      if (loadError) {
+        console.error("[chat] échec chargement messages:", loadError);
+        setError("Impossible de charger la conversation.");
+      }
       if (data) setMessages(data as Message[]);
       setLoading(false);
     }
@@ -58,7 +63,18 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
     const unread = messages.filter((m) => m.receiver_id === currentUserId && !m.read);
     if (!unread.length) return;
     const ids = unread.map((m) => m.id);
-    supabase.from("messages").update({ read: true }).in("id", ids).then(() => {});
+    supabase
+      .from("messages")
+      .update({ read: true })
+      .in("id", ids)
+      .then(({ error: readError }) => {
+        if (readError) {
+          console.error("[chat] échec marquage lu:", readError);
+          return;
+        }
+        setMessages((prev) => prev.map((m) => (ids.includes(m.id) ? { ...m, read: true } : m)));
+        window.dispatchEvent(new Event("messages:read"));
+      });
   }, [messages, currentUserId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Realtime subscription
@@ -81,6 +97,16 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
 
           setMessages((prev) => {
             if (prev.some((m) => m.id === msg.id)) return prev;
+            // Notre propre message arrive par le realtime avant la réponse de l'INSERT :
+            // il remplace la version optimistique.
+            const tempIdx = prev.findIndex(
+              (m) => m.id.startsWith("temp-") && m.sender_id === msg.sender_id && m.content === msg.content
+            );
+            if (tempIdx !== -1) {
+              const next = [...prev];
+              next[tempIdx] = msg;
+              return next;
+            }
             return [...prev, msg];
           });
         }
@@ -102,10 +128,24 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
     if (!content || sending) return;
 
     setSending(true);
+    setError(null);
     setInput("");
     if (textareaRef.current) textareaRef.current.style.height = "40px";
 
-    const { data: inserted } = await supabase
+    // Affichage optimiste : le message apparaît tout de suite
+    const tempId = `temp-${Date.now()}`;
+    const optimistic: Message = {
+      id: tempId,
+      annonce_id: annonceId,
+      content,
+      sender_id: currentUserId,
+      receiver_id: chatPartnerId,
+      created_at: new Date().toISOString(),
+      read: false,
+    };
+    setMessages((prev) => [...prev, optimistic]);
+
+    const { data: inserted, error: insertError } = await supabase
       .from("messages")
       .insert({
         annonce_id: annonceId,
@@ -113,24 +153,37 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
         receiver_id: chatPartnerId,
         content,
       })
-      .select("id")
+      .select("id, annonce_id, content, sender_id, receiver_id, created_at, read")
       .single();
 
     setSending(false);
 
-    if (inserted) {
-      // Fire-and-forget email notification
-      fetch("/api/messages/notify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messageId: inserted.id,
-          annonceId,
-          senderId: currentUserId,
-          receiverId: chatPartnerId,
-        }),
-      });
+    if (insertError || !inserted) {
+      console.error("[chat] échec envoi message:", insertError);
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      setInput(content); // on rend le texte pour pouvoir réessayer
+      setError("Le message n'a pas pu être envoyé. Réessaie dans un instant.");
+      return;
     }
+
+    // Remplace le message temporaire (sauf si le realtime l'a déjà ajouté)
+    setMessages((prev) => {
+      const withoutTemp = prev.filter((m) => m.id !== tempId);
+      if (withoutTemp.some((m) => m.id === inserted.id)) return withoutTemp;
+      return [...withoutTemp, inserted as Message];
+    });
+
+    // Fire-and-forget email notification
+    fetch("/api/messages/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messageId: inserted.id,
+        annonceId,
+        senderId: currentUserId,
+        receiverId: chatPartnerId,
+      }),
+    }).catch(() => {});
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -195,6 +248,12 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
         })}
         <div ref={bottomRef} />
       </div>
+
+      {error && (
+        <p role="alert" className="px-4 py-1.5 font-dm text-xs text-red-600 bg-red-50 border-t border-red-100">
+          {error}
+        </p>
+      )}
 
       {/* Input */}
       <div className="border-t border-[#e0ebe2] px-3 py-2.5 flex items-end gap-2 bg-white">

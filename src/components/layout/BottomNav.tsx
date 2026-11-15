@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUnreadMessages } from "@/lib/hooks/useUnreadMessages";
 
 const NAV_ITEMS = [
   {
@@ -75,6 +76,7 @@ const NAV_ITEMS = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const unread = useUnreadMessages();
 
   // Sur les pages détail d'annonce, le CTA fixe remplace la bottom nav
   if (/^\/annonce\/[^/]+$/.test(pathname)) return null;
@@ -88,9 +90,17 @@ export function BottomNav() {
             <Link
               key={href}
               href={href}
-              className="flex flex-col items-center gap-0.5 py-1 px-2 min-w-[52px]"
+              className="relative flex flex-col items-center gap-0.5 py-1 px-2 min-w-[52px]"
             >
               {icon(active)}
+              {href === "/messages" && unread > 0 && (
+                <span
+                  aria-label={`${unread} message${unread > 1 ? "s" : ""} non lu${unread > 1 ? "s" : ""}`}
+                  className="absolute top-0 right-2 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[9px] font-semibold leading-4 text-center"
+                >
+                  {unread > 9 ? "9+" : unread}
+                </span>
+              )}
               {label !== "Publier" && (
                 <span
                   className={[
