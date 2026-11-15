@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { waitUntil } from "@vercel/functions";
 import { triggerMatchingForAnnonce } from "@/lib/matching";
 import { notifyNewMessage } from "@/lib/message-notify";
@@ -114,4 +115,34 @@ async function sendInvitation(
       .then((r) => { if (r.status === "error") console.error("[invitation] notif email:", r.error); })
       .catch((err) => console.error("[invitation] notif email:", err))
   );
+}
+
+/**
+ * Suppression d'une annonce par son organisateur (inscriptions, messages,
+ * file d'alertes et avis suivent en cascade). Redirige vers /explorer.
+ */
+export async function deleteAnnonce(annonceId: string): Promise<{ error: string }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/connexion");
+
+  // Le filtre organizer_id double la RLS ; une ligne non supprimée = pas le droit.
+  const { data, error } = await supabase
+    .from("annonces")
+    .delete()
+    .eq("id", annonceId)
+    .eq("organizer_id", user.id)
+    .select("id");
+
+  if (error) {
+    console.error("[deleteAnnonce]", error.code, error.message);
+    return { error: "La suppression a échoué. Réessaie dans un instant." };
+  }
+  if (!data?.length) {
+    return { error: "Annonce introuvable ou tu n'en es pas l'organisateur." };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/explorer");
+  redirect("/explorer");
 }
