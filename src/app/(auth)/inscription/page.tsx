@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardBody } from "@/components/ui/Card";
 import { SPORT_EMOJI, SPORT_LABEL } from "@/components/ui/Badge";
+import { normalizeSportCustom, SPORT_CUSTOM_MAX } from "@/lib/profile-options";
 
 const SPORTS = Object.keys(SPORT_LABEL) as (keyof typeof SPORT_LABEL)[];
 
@@ -17,6 +18,7 @@ export default function InscriptionPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedSports, setSelectedSports] = useState<string[]>([]);
+  const [sportCustom, setSportCustom] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export default function InscriptionPage() {
       email,
       password,
       options: {
-        data: { name, sports: selectedSports },
+        data: { name, sports: selectedSports, sport_custom: normalizeSportCustom(sportCustom) },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
@@ -208,13 +210,22 @@ export default function InscriptionPage() {
               ))}
             </div>
 
+            <Input
+              id="inscription-sport-custom"
+              label="Autre sport (facultatif)"
+              placeholder="Ex. : escalade, tennis de table…"
+              value={sportCustom}
+              maxLength={SPORT_CUSTOM_MAX}
+              onChange={(e) => setSportCustom(e.target.value)}
+            />
+
             <p className="font-dm text-xs text-text-secondary">
-              {selectedSports.length === 0
+              {selectedSports.length === 0 && !sportCustom.trim()
                 ? "Sélectionne au moins un sport"
                 : `${selectedSports.length} sport${selectedSports.length > 1 ? "s" : ""} sélectionné${selectedSports.length > 1 ? "s" : ""}`}
             </p>
 
-            <Button type="submit" loading={loading} disabled={selectedSports.length === 0}>
+            <Button type="submit" loading={loading} disabled={selectedSports.length === 0 && !sportCustom.trim()}>
               Créer mon compte
             </Button>
 

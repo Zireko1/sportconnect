@@ -123,6 +123,7 @@ export default async function ProfilPage() {
           latitude: p?.latitude ?? null,
           longitude: p?.longitude ?? null,
           sports: p?.sports ?? [],
+          sport_custom: p?.sport_custom ?? null,
           level: p?.level ?? null,
         }}
       />
@@ -130,9 +131,9 @@ export default async function ProfilPage() {
       {/* Sports favoris */}
       <div className="bg-surface rounded-card shadow-card p-5">
         <h2 className="font-syne font-bold text-base text-text-primary mb-3">Sports pratiqués</h2>
-        {p?.sports && p.sports.length > 0 ? (
+        {(p?.sports && p.sports.length > 0) || p?.sport_custom ? (
           <div className="flex flex-wrap gap-2">
-            {p.sports.map((sport) => (
+            {(p?.sports ?? []).map((sport) => (
               <span
                 key={sport}
                 className="font-dm text-sm bg-green-light text-green-alpine font-medium px-3 py-1 rounded-full"
@@ -140,6 +141,11 @@ export default async function ProfilPage() {
                 {SPORT_LABELS[sport] ?? sport}
               </span>
             ))}
+            {p?.sport_custom && (
+              <span className="font-dm text-sm bg-green-light text-green-alpine font-medium px-3 py-1 rounded-full">
+                {p.sport_custom}
+              </span>
+            )}
           </div>
         ) : (
           <p className="font-dm text-sm text-text-secondary">Aucun sport renseigné.</p>

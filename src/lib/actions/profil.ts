@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { PROFILE_SPORTS, PROFILE_LEVELS } from "@/lib/profile-options";
+import { PROFILE_SPORTS, PROFILE_LEVELS, normalizeSportCustom } from "@/lib/profile-options";
 import type { Sport, Level } from "@/types/database";
 
 const LEVELS: readonly Level[] = PROFILE_LEVELS.map((l) => l.value);
@@ -14,6 +14,7 @@ export interface ProfileUpdate {
   latitude: number | null;
   longitude: number | null;
   sports: Sport[];
+  sport_custom: string | null;
   level: Level | null;
 }
 
@@ -42,6 +43,7 @@ export async function updateProfile(input: ProfileUpdate): Promise<{ error?: str
       latitude: city ? input.latitude : null,
       longitude: city ? input.longitude : null,
       sports,
+      sport_custom: normalizeSportCustom(input.sport_custom),
       level,
     },
     { onConflict: "id" }

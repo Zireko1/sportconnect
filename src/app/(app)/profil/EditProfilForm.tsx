@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { CityAutocomplete } from "@/components/ui/CityAutocomplete";
 import { updateProfile } from "@/lib/actions/profil";
-import { PROFILE_SPORTS, PROFILE_LEVELS, SPORT_LABELS } from "@/lib/profile-options";
+import { PROFILE_SPORTS, PROFILE_LEVELS, SPORT_LABELS, SPORT_CUSTOM_MAX } from "@/lib/profile-options";
 import type { Sport, Level } from "@/types/database";
 
 export interface EditableProfile {
@@ -15,6 +15,7 @@ export interface EditableProfile {
   latitude: number | null;
   longitude: number | null;
   sports: Sport[];
+  sport_custom: string | null;
   level: Level | null;
 }
 
@@ -29,6 +30,7 @@ export function EditProfilForm({ profile }: { profile: EditableProfile }) {
   const [city, setCity] = useState(profile.city ?? "");
   const [coords, setCoords] = useState({ lat: profile.latitude, lon: profile.longitude });
   const [sports, setSports] = useState<Sport[]>(profile.sports ?? []);
+  const [sportCustom, setSportCustom] = useState(profile.sport_custom ?? "");
   const [level, setLevel] = useState<Level | null>(profile.level);
 
   function reset() {
@@ -36,6 +38,7 @@ export function EditProfilForm({ profile }: { profile: EditableProfile }) {
     setCity(profile.city ?? "");
     setCoords({ lat: profile.latitude, lon: profile.longitude });
     setSports(profile.sports ?? []);
+    setSportCustom(profile.sport_custom ?? "");
     setLevel(profile.level);
     setError(null);
   }
@@ -58,6 +61,7 @@ export function EditProfilForm({ profile }: { profile: EditableProfile }) {
         latitude: coords.lat,
         longitude: coords.lon,
         sports,
+        sport_custom: sportCustom || null,
         level,
       });
       if (res.error) {
@@ -142,6 +146,14 @@ export function EditProfilForm({ profile }: { profile: EditableProfile }) {
             );
           })}
         </div>
+        <Input
+          id="profil-sport-custom"
+          label="Autre sport (facultatif)"
+          placeholder="Ex. : escalade, tennis de table…"
+          value={sportCustom}
+          maxLength={SPORT_CUSTOM_MAX}
+          onChange={(e) => setSportCustom(e.target.value)}
+        />
       </fieldset>
 
       <fieldset className="space-y-2">

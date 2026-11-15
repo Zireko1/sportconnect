@@ -30,6 +30,7 @@ export type Database = {
           name: string;
           avatar_url: string | null;
           sports: Sport[];
+          sport_custom: string | null;
           level: Level | null;
           city: string | null;
           latitude: number | null;
@@ -42,6 +43,7 @@ export type Database = {
           name: string;
           avatar_url?: string | null;
           sports?: Sport[];
+          sport_custom?: string | null;
           level?: Level | null;
           city?: string | null;
           latitude?: number | null;
@@ -54,6 +56,7 @@ export type Database = {
           name?: string;
           avatar_url?: string | null;
           sports?: Sport[];
+          sport_custom?: string | null;
           level?: Level | null;
           city?: string | null;
           latitude?: number | null;
@@ -371,6 +374,7 @@ export type Database = {
           sports: Sport[];
           level: Level | null;
           city: string | null;
+          sport_custom: string | null;
         };
         Relationships: [];
       };

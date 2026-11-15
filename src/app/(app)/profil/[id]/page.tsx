@@ -38,7 +38,7 @@ export default async function ProfilJoueurPage({ params }: PageProps) {
   const [{ data: playerData }, { data: { user } }] = await Promise.all([
     supabase
       .from("public_profiles")
-      .select("id, name:first_name, avatar_url, sports, level, city")
+      .select("id, name:first_name, avatar_url, sports, level, city, sport_custom")
       .eq("id", playerId)
       .single(),
     supabase.auth.getUser(),
@@ -178,13 +178,13 @@ export default async function ProfilJoueurPage({ params }: PageProps) {
       </div>
 
       {/* Sports pratiqués */}
-      {player.sports && player.sports.length > 0 && (
+      {((player.sports && player.sports.length > 0) || player.sport_custom) && (
         <div className="bg-surface rounded-card shadow-card p-5">
           <h2 className="font-syne font-bold text-base text-text-primary mb-3">
             Sports pratiqués
           </h2>
           <div className="flex flex-wrap gap-2">
-            {player.sports.map((sport) => (
+            {(player.sports ?? []).map((sport) => (
               <span
                 key={sport}
                 className="font-dm text-sm bg-green-light text-green-alpine font-medium px-3 py-1 rounded-full"
@@ -192,6 +192,11 @@ export default async function ProfilJoueurPage({ params }: PageProps) {
                 {SPORT_LABELS[sport] ?? sport}
               </span>
             ))}
+            {player.sport_custom && (
+              <span className="font-dm text-sm bg-green-light text-green-alpine font-medium px-3 py-1 rounded-full">
+                {player.sport_custom}
+              </span>
+            )}
           </div>
           {player.level && (
             <p className="font-dm text-sm text-text-secondary mt-3">
