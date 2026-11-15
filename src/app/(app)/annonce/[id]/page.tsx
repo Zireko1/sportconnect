@@ -244,7 +244,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
         </div>
 
         {/* Supprimer l'annonce (mobile) */}
-        {isOrganizer && !isPast && (
+        {isOrganizer && (
           <div className="mx-4 mb-4 bg-surface rounded-card shadow-card p-4">
             <DeleteAnnonceButton annonceId={id} />
           </div>
@@ -403,7 +403,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
             )}
 
             {/* Supprimer l'annonce */}
-            {isOrganizer && !isPast && (
+            {isOrganizer && (
               <div className="bg-surface rounded-card shadow-card p-4">
                 <DeleteAnnonceButton annonceId={id} />
               </div>
