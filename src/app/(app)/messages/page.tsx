@@ -121,11 +121,12 @@ export default async function MessagesPage() {
       ) : (
         <div className="space-y-2">
           {conversations.map((conv) => {
-            // If current user is organizer, link with ?withUser= so the chat opens
+            // Organisateur : ?withUser= désigne l'interlocuteur. Participant : ?chat=1.
+            // Dans les deux cas le chat s'ouvre directement sur la page annonce.
             const isOrganizerOfAnnonce = conv.annonceOrganizerId === user.id;
             const href = isOrganizerOfAnnonce
               ? `/annonce/${conv.annonceId}?withUser=${conv.interlocutorId}`
-              : `/annonce/${conv.annonceId}`;
+              : `/annonce/${conv.annonceId}?chat=1`;
 
             const initials = conv.interlocutorName
               .split(" ")

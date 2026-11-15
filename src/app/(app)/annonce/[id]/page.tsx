@@ -16,7 +16,7 @@ type AnnonceDetail = Database["public"]["Tables"]["annonces"]["Row"] & {
 
 interface PageProps {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ withUser?: string }>;
+  searchParams: Promise<{ withUser?: string; chat?: string }>;
 }
 
 const LEVEL_LABELS: Record<string, string> = {
@@ -27,7 +27,7 @@ const LEVEL_LABELS: Record<string, string> = {
 
 export default async function AnnonceDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
-  const { withUser } = await searchParams;
+  const { withUser, chat } = await searchParams;
   const supabase = await createClient();
 
   const [{ data: annonce, error }, { data: { user } }] = await Promise.all([
@@ -102,6 +102,8 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
     if (!isOrganizer) {
       chatPartnerId = ann.organizer_id;
       chatLabel = "Contacter l'organisateur";
+      // Arrivée depuis /messages : on ouvre directement la conversation
+      chatDefaultOpen = chat === "1";
     } else if (withUser) {
       chatPartnerId = withUser;
       chatLabel = `Conversation avec ${chatPartnerName || "un participant"}`;

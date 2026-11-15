@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChatPanel } from "./ChatPanel";
 
 interface Props {
@@ -21,9 +21,20 @@ export function ContactSection({
   defaultOpen = false,
 }: Props) {
   const [open, setOpen] = useState(defaultOpen);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Ouvert d'office (arrivée depuis /messages) : on amène le chat à l'écran.
+  // La page monte une version mobile et une desktop ; seule la visible
+  // (offsetParent non nul) défile.
+  useEffect(() => {
+    if (!defaultOpen || !ref.current || ref.current.offsetParent === null) return;
+    const el = ref.current;
+    const t = setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
+    return () => clearTimeout(t);
+  }, [defaultOpen]);
 
   return (
-    <div className="bg-surface rounded-card shadow-card overflow-hidden">
+    <div ref={ref} className="bg-surface rounded-card shadow-card overflow-hidden scroll-mt-20">
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-green-light transition-colors"
