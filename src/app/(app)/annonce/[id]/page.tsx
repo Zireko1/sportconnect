@@ -8,6 +8,7 @@ import { ContactSection } from "@/components/annonces/ContactSection";
 import { StarRating } from "@/components/ui/StarRating";
 import { LocationMap } from "@/components/map/LocationMap";
 import { submitAvisAnnonce } from "@/lib/actions/avis";
+import { DeleteAnnonceButton } from "@/components/annonces/DeleteAnnonceButton";
 import type { Database } from "@/types/database";
 
 type AnnonceDetail = Database["public"]["Tables"]["annonces"]["Row"] & {
@@ -214,6 +215,13 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
           />
         </div>
 
+        {/* Supprimer l'annonce (mobile) */}
+        {isOrganizer && !isPast && (
+          <div className="mx-4 mb-4 bg-surface rounded-card shadow-card p-4">
+            <DeleteAnnonceButton annonceId={id} />
+          </div>
+        )}
+
         {/* Évaluations */}
         {(avgAnnonceNote !== null || canRateAnnonce) && (
           <div className="mx-4 mb-4 bg-surface rounded-card shadow-card p-4">
@@ -359,6 +367,13 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
                 annonceTitle={ann.title}
                 defaultOpen={chatDefaultOpen}
               />
+            )}
+
+            {/* Supprimer l'annonce */}
+            {isOrganizer && !isPast && (
+              <div className="bg-surface rounded-card shadow-card p-4">
+                <DeleteAnnonceButton annonceId={id} />
+              </div>
             )}
           </aside>
         </div>
