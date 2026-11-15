@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { waitUntil } from "@vercel/functions";
 import { triggerMatchingForAnnonce } from "@/lib/matching";
 import { notifyNewMessage } from "@/lib/message-notify";
+import { collectCancellationRecipients, sendCancellationEmails } from "@/lib/annonce-cancel-notify";
 import type { Sport, SportType, Level } from "@/types/database";
 
 export interface CreateAnnonceInput {
@@ -119,12 +120,31 @@ async function sendInvitation(
 
 /**
  * Suppression d'une annonce par son organisateur (inscriptions, messages,
- * file d'alertes et avis suivent en cascade). Redirige vers /explorer.
+ * file d'alertes et avis suivent en cascade), puis email d'annulation aux
+ * inscrits. Redirige vers /explorer.
  */
-export async function deleteAnnonce(annonceId: string): Promise<{ error: string }> {
+export async function deleteAnnonce(
+  annonceId: string,
+  organizerMessage?: string | null
+): Promise<{ error: string }> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/connexion");
+
+  // Inscrits à prévenir : à lire AVANT la suppression (les inscriptions partent en cascade).
+  // Uniquement si l'utilisateur est bien l'organisateur ; un échec ici ne bloque pas la suppression.
+  const { data: owned } = await supabase
+    .from("annonces")
+    .select("id")
+    .eq("id", annonceId)
+    .eq("organizer_id", user.id)
+    .maybeSingle();
+  const snapshot = owned
+    ? await collectCancellationRecipients(annonceId).catch((err) => {
+        console.error("[deleteAnnonce] collecte des inscrits:", err);
+        return null;
+      })
+    : null;
 
   // Le filtre organizer_id double la RLS ; une ligne non supprimée = pas le droit.
   const { data, error } = await supabase
@@ -140,6 +160,16 @@ export async function deleteAnnonce(annonceId: string): Promise<{ error: string 
   }
   if (!data?.length) {
     return { error: "Annonce introuvable ou tu n'en es pas l'organisateur." };
+  }
+
+  // Emails en arrière-plan : ni bloquants ni capables d'annuler la suppression
+  if (snapshot) {
+    const message = organizerMessage?.trim().slice(0, 500) || null;
+    waitUntil(
+      sendCancellationEmails(snapshot, message).catch((err) =>
+        console.error("[deleteAnnonce] emails d'annulation:", err)
+      )
+    );
   }
 
   revalidatePath("/");
