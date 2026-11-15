@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmez votre adresse email — SportVoisin</title>
+</head>
+<body style="background-color:#f6f8fa; margin:0; padding:40px 20px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td align="center">
+        <table width="500" cellpadding="0" cellspacing="0" border="0" style="max-width:500px; width:100%;">
+
+          <!-- HEADER -->
+          <tr>
+            <td style="background-color:#1e3a5f; border-radius:16px 16px 0 0; padding:28px 36px;">
+              <p style="margin:0; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:20px; font-weight:800; color:#ffffff; letter-spacing:-0.5px;">
+                SportVoisin
+              </p>
+            </td>
+          </tr>
+
+          <!-- BODY -->
+          <tr>
+            <td style="background-color:#ffffff; border-left:1px solid #dce6f0; border-right:1px solid #dce6f0; padding:36px;">
+
+              <p style="margin:0 0 16px; font-size:16px; font-weight:600; color:#1a2e40;">
+                Confirme ton adresse email
+              </p>
+
+              <p style="margin:0 0 12px; font-size:14px; line-height:1.7; color:#1a2e40;">
+                Bienvenue sur <strong>SportVoisin</strong> ! Pour activer ton compte et trouver des partenaires sportifs près de chez toi, clique sur le bouton ci-dessous.
+              </p>
+
+              <p style="margin:0 0 28px; font-size:14px; line-height:1.7; color:#666666;">
+                Ce lien expire dans <strong>24 heures</strong>.
+              </p>
+
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center">
+                    <a href="{{ .ConfirmationURL }}"
+                       style="display:inline-block; background-color:#1e3a5f; color:#ffffff; font-size:15px; font-weight:700; text-decoration:none; padding:14px 36px; border-radius:99px;">
+                      Confirmer mon email →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:28px 0 0; font-size:12px; line-height:1.6; color:#999999;">
+                Si tu n'as pas créé de compte sur SportVoisin, tu peux ignorer cet email en toute sécurité.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="background-color:#ffffff; border-left:1px solid #dce6f0; border-right:1px solid #dce6f0; border-bottom:1px solid #dce6f0; border-radius:0 0 16px 16px; padding:20px 36px 28px;">
+              <hr style="border:none; border-top:1px solid #dce6f0; margin:0 0 18px;" />
+              <p style="margin:0; font-size:11px; line-height:1.7; color:#aaaaaa;">
+                SportVoisin · Autour du Léman et des Alpes<br>
+                Tu reçois cet email car une inscription a été initiée avec cette adresse.<br>
+                <a href="{{ .SiteURL }}" style="color:#1e3a5f; text-decoration:underline;">SportVoisin</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
