@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useMemo } from "react";
+import Link from "next/link";
 import { SPORT_EMOJI, SPORT_LABEL } from "@/components/ui/Badge";
 import { saveAlertConfig, sendTestEmail, type AlertConfigData } from "@/lib/actions/alertes";
 import type { Sport, AlertFrequency, Level } from "@/types/database";
@@ -56,7 +57,13 @@ function estimateWeekly(cfg: AlertConfigData): number {
   ));
 }
 
-export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData | null }) {
+export function AlertesForm({
+  defaultConfig,
+  missingCity = false,
+}: {
+  defaultConfig: AlertConfigData | null;
+  missingCity?: boolean;
+}) {
   const [cfg, setCfg] = useState<AlertConfigData>(defaultConfig ?? DEFAULT_CONFIG);
   const [saved, setSaved] = useState(false);
   const [testSent, setTestSent] = useState<string | null>(null);
@@ -157,6 +164,24 @@ export function AlertesForm({ defaultConfig }: { defaultConfig: AlertConfigData 
           ))}
         </ul>
       </div>
+
+      {missingCity && (
+        <div
+          role="alert"
+          className="mb-6 flex flex-col sm:flex-row sm:items-center gap-3 rounded-card border border-amber-200 bg-amber-50 px-4 py-3"
+        >
+          <p className="flex-1 font-dm text-sm text-amber-900">
+            📍 <strong>Ajoute ta ville dans ton profil pour activer tes alertes.</strong>{" "}
+            Sans ville, on ne peut pas savoir quelles annonces sont à moins de {cfg.radius_km} km de chez toi.
+          </p>
+          <Link
+            href="/profil"
+            className="self-start sm:self-auto font-dm text-sm font-medium bg-green-alpine text-white px-4 py-2 rounded-pill hover:bg-green-dark transition-colors whitespace-nowrap"
+          >
+            Compléter mon profil
+          </Link>
+        </div>
+      )}
 
       {/* ── Desktop 2-col / mobile 1-col ── */}
       <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-6 space-y-4 lg:space-y-0">
