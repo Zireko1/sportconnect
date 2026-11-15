@@ -9,6 +9,7 @@ import { StarRating } from "@/components/ui/StarRating";
 import { LocationMap } from "@/components/map/LocationMap";
 import { submitAvisAnnonce } from "@/lib/actions/avis";
 import { DeleteAnnonceButton } from "@/components/annonces/DeleteAnnonceButton";
+import { OrganizerParticipants, type ParticipantChip } from "@/components/annonces/OrganizerParticipants";
 import type { Database } from "@/types/database";
 
 type AnnonceDetail = Database["public"]["Tables"]["annonces"]["Row"] & {
@@ -57,6 +58,16 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
     ? supabase.from("public_profiles").select("name:first_name").eq("id", withUser).single()
     : Promise.resolve({ data: null });
 
+  // Organisateur uniquement : liste des inscrits (prénom + avatar) pour les contacter
+  const fetchParticipants = isOrganizer
+    ? supabase
+        .from("inscriptions")
+        .select("user_id, created_at, profile:public_profiles(first_name, avatar_url)")
+        .eq("annonce_id", id)
+        .neq("status", "cancelled")
+        .order("created_at")
+    : Promise.resolve({ data: null });
+
   const isPast = new Date(ann.date_time) < new Date();
 
   const fetchAvisAnnonce = supabase
@@ -79,7 +90,19 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
     { data: chatPartnerRow },
     { data: avisAnnonceData },
     { data: myAvisRaw },
-  ] = await Promise.all([fetchInscription, fetchChatPartner, fetchAvisAnnonce, fetchMyAvis]);
+    { data: participantsRaw },
+  ] = await Promise.all([fetchInscription, fetchChatPartner, fetchAvisAnnonce, fetchMyAvis, fetchParticipants]);
+
+  const participants: ParticipantChip[] = (
+    (participantsRaw ?? []) as unknown as {
+      user_id: string;
+      profile: { first_name: string | null; avatar_url: string | null } | null;
+    }[]
+  ).map((r) => ({
+    userId: r.user_id,
+    firstName: r.profile?.first_name?.trim() || "Participant",
+    avatarUrl: r.profile?.avatar_url ?? null,
+  }));
 
   if (inscription) isInscrit = true;
   if (chatPartnerRow) chatPartnerName = chatPartnerRow.name;
@@ -176,7 +199,11 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
           <p className="font-syne font-bold text-sm text-text-primary mb-3">
             Participants — {ann.filled_spots}/{ann.total_spots}
           </p>
-          <SpotsVisualization filled={ann.filled_spots} total={ann.total_spots} />
+          {isOrganizer ? (
+            <OrganizerParticipants annonceId={id} participants={participants} total={ann.total_spots} activeUserId={withUser} />
+          ) : (
+            <SpotsVisualization filled={ann.filled_spots} total={ann.total_spots} />
+          )}
         </section>
 
         {/* Organisateur */}
@@ -194,6 +221,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
         {user && chatPartnerId && (
           <div className="mx-4 mb-4">
             <ContactSection
+              key={chatPartnerId}
               annonceId={id}
               currentUserId={user.id}
               chatPartnerId={chatPartnerId}
@@ -299,7 +327,11 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
               <p className="font-syne font-bold text-sm text-text-primary mb-4">
                 Participants — {ann.filled_spots}/{ann.total_spots}
               </p>
-              <SpotsVisualization filled={ann.filled_spots} total={ann.total_spots} />
+              {isOrganizer ? (
+                <OrganizerParticipants annonceId={id} participants={participants} total={ann.total_spots} activeUserId={withUser} />
+              ) : (
+                <SpotsVisualization filled={ann.filled_spots} total={ann.total_spots} />
+              )}
             </div>
 
             {/* Carte */}
@@ -360,6 +392,7 @@ export default async function AnnonceDetailPage({ params, searchParams }: PagePr
             {/* Chat */}
             {user && chatPartnerId && (
               <ContactSection
+                key={chatPartnerId}
                 annonceId={id}
                 currentUserId={user.id}
                 chatPartnerId={chatPartnerId}
