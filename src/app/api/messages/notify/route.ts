@@ -1,72 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { MessageNotifEmail } from "@/emails/MessageNotif";
+import { createClient } from "@/lib/supabase/server";
+import { notifyNewMessage } from "@/lib/message-notify";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+/**
+ * Notification email d'un nouveau message, appelée par le chat juste après l'envoi.
+ * Réservée à l'expéditeur authentifié du message ; destinataire, annonce et
+ * contenu sont relus en base (cf. notifyNewMessage).
+ */
 export async function POST(req: NextRequest) {
-  let body: { messageId?: string; annonceId?: string; senderId?: string; receiverId?: string };
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+
+  let messageId: unknown;
   try {
-    body = await req.json();
+    ({ messageId } = await req.json());
   } catch {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
-
-  const { messageId, annonceId, senderId, receiverId } = body;
-  if (!messageId || !annonceId || !senderId || !receiverId) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  if (typeof messageId !== "string" || !UUID_RE.test(messageId)) {
+    return NextResponse.json({ error: "messageId invalide" }, { status: 400 });
   }
 
-  const supabase = createAdminClient();
+  const result = await notifyNewMessage(messageId, user.id);
 
-  // Anti-spam: skip if we already notified for this conversation in the last 2 hours
-  const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
-  const { count } = await supabase
-    .from("messages")
-    .select("id", { count: "exact", head: true })
-    .eq("annonce_id", annonceId)
-    .eq("sender_id", senderId)
-    .eq("receiver_id", receiverId)
-    .gte("created_at", twoHoursAgo)
-    .neq("id", messageId);
-
-  if (count && count > 0) {
-    return NextResponse.json({ ok: true, skipped: true });
+  switch (result.status) {
+    case "sent":
+      return NextResponse.json({ ok: true, sent: true });
+    case "skipped":
+      return NextResponse.json({ ok: true, skipped: true, reason: result.reason });
+    // Même réponse pour « inconnu » et « pas à toi » : on ne révèle pas l'existence du message
+    case "forbidden":
+    case "not_found":
+      return NextResponse.json({ error: "Message introuvable" }, { status: 404 });
+    case "error":
+      console.error("[messages/notify] Resend error:", result.error);
+      return NextResponse.json({ ok: false, error: "Email send failed" }, { status: 500 });
   }
-
-  // Fetch the data needed for the email
-  const [{ data: msgRow }, { data: sender }, { data: receiver }, { data: annonce }] =
-    await Promise.all([
-      supabase.from("messages").select("content").eq("id", messageId).single(),
-      supabase.from("users").select("name, email").eq("id", senderId).single(),
-      supabase.from("users").select("name, email").eq("id", receiverId).single(),
-      supabase.from("annonces").select("id, title").eq("id", annonceId).single(),
-    ]);
-
-  if (!msgRow || !sender || !receiver || !annonce) {
-    return NextResponse.json({ error: "Data not found" }, { status: 404 });
-  }
-
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-
-  try {
-    await resend.emails.send({
-      from: "alertes@sportvoisin.fr",
-      to: receiver.email,
-      subject: `[SportVoisin] Nouveau message de ${sender.name}`,
-      react: MessageNotifEmail({
-        receiverName: receiver.name,
-        senderName: sender.name,
-        messagePreview: msgRow.content.slice(0, 50),
-        annonceTitle: annonce.title,
-        annonceUrl: `${appUrl}/annonce/${annonce.id}`,
-      }),
-    });
-  } catch (err) {
-    console.error("[messages/notify] Resend error:", err);
-    return NextResponse.json({ ok: false, error: "Email send failed" }, { status: 500 });
-  }
-
-  return NextResponse.json({ ok: true, sent: true });
 }

@@ -177,12 +177,7 @@ export function ChatPanel({ annonceId, currentUserId, chatPartnerId, annonceTitl
     fetch("/api/messages/notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messageId: inserted.id,
-        annonceId,
-        senderId: currentUserId,
-        receiverId: chatPartnerId,
-      }),
+      body: JSON.stringify({ messageId: inserted.id }),
     }).catch(() => {});
   }
 

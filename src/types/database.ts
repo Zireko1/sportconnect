@@ -272,6 +272,7 @@ export type Database = {
           content: string;
           read: boolean;
           created_at: string;
+          notified_at: string | null;
         };
         Insert: {
           id?: string;
@@ -281,6 +282,7 @@ export type Database = {
           content: string;
           read?: boolean;
           created_at?: string;
+          notified_at?: string | null;
         };
         Update: {
           id?: string;
@@ -290,6 +292,7 @@ export type Database = {
           content?: string;
           read?: boolean;
           created_at?: string;
+          notified_at?: string | null;
         };
         Relationships: [
           {

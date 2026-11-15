@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { waitUntil } from "@vercel/functions";
 import { triggerMatchingForAnnonce } from "@/lib/matching";
+import { notifyNewMessage } from "@/lib/message-notify";
 import type { Sport, SportType, Level } from "@/types/database";
 
 export interface CreateAnnonceInput {
@@ -108,12 +109,9 @@ async function sendInvitation(
     return;
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
   waitUntil(
-    fetch(`${appUrl}/api/messages/notify`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messageId: msg.id, annonceId: p.annonceId, senderId: p.senderId, receiverId: p.receiverId }),
-    }).catch((err) => console.error("[invitation] notif email:", err))
+    notifyNewMessage(msg.id, p.senderId)
+      .then((r) => { if (r.status === "error") console.error("[invitation] notif email:", r.error); })
+      .catch((err) => console.error("[invitation] notif email:", err))
   );
 }
