@@ -101,7 +101,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </div>
 
       {/* ========== DESKTOP LAYOUT (>= lg) ========== */}
-      <div className="hidden lg:grid lg:grid-cols-[280px_1fr_320px] lg:gap-6 max-w-7xl mx-auto px-6 py-6 items-start">
+      <div className="hidden lg:grid lg:grid-cols-[220px_1fr_260px] xl:grid-cols-[280px_1fr_320px] lg:gap-6 max-w-7xl mx-auto px-6 py-6 items-start">
 
         {/* LEFT SIDEBAR — recherche + filtres */}
         <aside className="sticky top-20 space-y-4">
