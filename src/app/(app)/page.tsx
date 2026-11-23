@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { AnnonceFilters } from "@/components/annonces/AnnonceFilters";
 import { AnnonceFeed } from "@/components/annonces/AnnonceFeed";
-import { CommunityStats } from "@/components/annonces/CommunityStats";
 import { SearchBar } from "@/components/annonces/SearchBar";
 import { UserAvatar } from "@/components/layout/UserAvatar";
 import { LocationBar } from "@/components/annonces/LocationBar";
@@ -52,10 +51,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </Suspense>
         </header>
 
-        {/* Stats communauté */}
-        <Suspense fallback={<StatsSkeleton />}>
-          <CommunityStats />
-        </Suspense>
+        {/* Accroche early adopter */}
+        <EarlyAdopterCard className="mx-4 mt-3" />
 
         <SportifsTeaser className="mx-4 mt-3" />
 
@@ -147,19 +144,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </Suspense>
         </main>
 
-        {/* RIGHT SIDEBAR — stats + carte */}
+        {/* RIGHT SIDEBAR — communauté + carte */}
         <aside className="sticky top-20 space-y-4">
-          {/* Stats */}
-          <div className="bg-surface rounded-card shadow-card overflow-hidden">
-            <div className="px-4 py-3 border-b border-[#e0ebe2]">
-              <p className="font-syne font-bold text-sm text-text-primary">
-                Communauté
-              </p>
-            </div>
-            <Suspense fallback={<StatsSkeleton />}>
-              <CommunityStats />
-            </Suspense>
-          </div>
+          {/* Accroche early adopter */}
+          <EarlyAdopterCard />
 
           <SportifsTeaser />
 
@@ -197,15 +185,16 @@ function SportifsTeaser({ className = "" }: { className?: string }) {
   );
 }
 
-function StatsSkeleton() {
+function EarlyAdopterCard({ className = "" }: { className?: string }) {
   return (
-    <div className="grid grid-cols-3 gap-px bg-[#e0ebe2] border-b border-[#e0ebe2]">
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="bg-surface px-2 py-3 text-center space-y-1">
-          <div className="h-5 w-10 bg-green-light rounded animate-pulse mx-auto" />
-          <div className="h-3 w-16 bg-[#f0f5f1] rounded animate-pulse mx-auto" />
-        </div>
-      ))}
+    <div className={`bg-surface rounded-card shadow-card px-4 py-4 border-l-4 border-green-alpine ${className}`}>
+      <p className="font-syne font-bold text-base text-text-primary leading-snug">
+        Rejoins les premiers sportifs de la région <span aria-hidden>🏃</span>
+      </p>
+      <p className="font-dm text-xs text-text-secondary mt-1">
+        Sois parmi les fondateurs de la communauté{" "}
+        <span className="font-semibold text-green-alpine">SportVoisin</span> — Haute-Savoie &amp; bassin lémanique
+      </p>
     </div>
   );
 }
