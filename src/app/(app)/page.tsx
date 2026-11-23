@@ -3,6 +3,7 @@ import { AnnonceFilters } from "@/components/annonces/AnnonceFilters";
 import { AnnonceFeed } from "@/components/annonces/AnnonceFeed";
 import { SearchBar } from "@/components/annonces/SearchBar";
 import { UserAvatar } from "@/components/layout/UserAvatar";
+import { Logo } from "@/components/ui/Logo";
 import { LocationBar } from "@/components/annonces/LocationBar";
 import { getViewer } from "@/lib/viewer";
 import { AnnonceMapSection } from "@/components/map/AnnonceMapSection";
@@ -27,10 +28,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <header className="bg-surface px-4 pt-12 pb-4 space-y-3 sticky top-0 z-40 border-b border-[#e0ebe2]">
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-syne font-bold text-xl text-green-alpine">
-                Sport<span className="text-green-dark">Voisin</span>
-              </span>
-              <p className="font-dm text-text-secondary text-xs">
+              <Logo />
+              <p className="font-dm text-text-secondary text-xs mt-1">
                 {new Date().toLocaleDateString("fr-FR", {
                   weekday: "long",
                   day: "numeric",
